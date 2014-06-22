@@ -1,9 +1,9 @@
 RadioEyeAndroid
 ===============
 RadioEye client for android.
-
+ 
 When launching the app, you will be asking to login with your Facebook account.
-After login, visit Airfunction.com and sign in with the same Facebook account.
+After login, visit [AirFunction.com](http://airfunction.com/) and sign in with the same Facebook account.
 Upload some images, and publish them. If everything is OK, you will see them in the app.
 
 [a link](https://github.com/user/repo/blob/branch/other_file.md)
