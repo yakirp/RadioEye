@@ -16,15 +16,14 @@ Everything work well until we leave the app (onPause) and return back (onResume)
 Then, the sliding panel stop working.
 
 
+Please take a look at [the main sliding function](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L963-977)
 
-[The main sliding function](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L963-977)
-
-Note: the code is from [here](https://github.com/umano/AndroidSlidingUpPanel)
+**Note:** the code is from [here](https://github.com/umano/AndroidSlidingUpPanel)
  
  
  
-one more thing:
+**one more thing:**
 
-i see that when [this](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L195) variable is False , the sliding is ok, but after onPause this variable turn to True, and the sliding dont work.
+I see that when [this](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L195) variable is False , the sliding is ok, but after onPause() this variable turn to True, and the sliding dont work.
 I don't understand the exact purpose of this variable.
 
