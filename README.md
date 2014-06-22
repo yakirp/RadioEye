@@ -12,7 +12,7 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 - common   - contain some common jar's (reference library for RadioEye project)
 
 
-Evry thing work well until we leave the app (onPause) and return back (onResume).
+Everything work well until we leave the app (onPause) and return back (onResume).
 Then, the sliding panel dont work.
 
 
