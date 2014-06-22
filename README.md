@@ -11,17 +11,20 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 - facebook - facebook library (reference library for RadioEye project)
 - common   - contain some common jar's (reference library for RadioEye project)
 
+
+The problem start in  [SlidingUpPanelLayout.java](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java)
+
 ```java
 boolean smoothSlideTo(float slideOffset, int velocity,
 			Panelcallback callback) {
 	 
 		if (!mCanSlide) {
 			// Nothing to do.
-	 
-			return false;
+	  		return false;
 		}
 
 		final int topBound = getSlidingTop();
+		
 		int y = mIsSlidingUp ? (int) (topBound + slideOffset * mSlideRange)
 				: (int) (topBound - slideOffset * mSlideRange);
 
@@ -41,6 +44,7 @@ boolean smoothSlideTo(float slideOffset, int velocity,
 
 			return true;
 		}
+		
 		return false;
 	}
  
