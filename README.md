@@ -18,12 +18,12 @@ Then, the sliding panel stop working.
 
 Please take a look at [the main sliding function](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L949-979) where [this](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L963) code appear to slide the panel but nothing happen
 
-**Note:** the code is from [here](https://github.com/umano/AndroidSlidingUpPanel)
+**Note:** The SlidingUpPanelLayout code was taken from [this project](https://github.com/umano/AndroidSlidingUpPanel)
  
  
  
 **one more thing:**
 
-I see that when [this](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L195) variable is False , the sliding is ok, but after onPause() this variable turn to True, and the sliding dont work.
+I saw that when [this](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L195) variable is False , the sliding is ok, but after onPause() this variable turn to True, and the sliding dont work.
 I don't understand the exact purpose of this variable.
 
