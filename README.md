@@ -12,7 +12,7 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 - **common**   - contain some common jar's (reference library for RadioEye project)
 
 
-**The app floow:**
+**The app flow:**
 When upload and publish image from the web site, the image ID is publish via Pubnub to the [subcribers](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/MainActivity.java#L170-216).
 Each message from pubnub contain the image id and the image type (top,center,ad).
 the image is loaded to WebView.
