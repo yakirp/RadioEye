@@ -13,10 +13,10 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 
 **Images type:**
 - **Top**    - the top image in the main app activity (i.e the radio program logo)
-- **center** - the main image. each new center image will slide up the ad image (the sliding panel)
-- **ad**     - the ad image that the user will see when publish a center image. this image is attached to the sliding panel
+- **Center** - the main image. each new center image will slide up the ad image (the sliding panel)
+- **Ad**     - the ad image that the user will see when publish a center image. this image is attached to the sliding panel
  
-
+*Only for checking , upload one top image , one ad image and some center images.*
 
 **The app flow:**
 When upload and publish image from the web site, the image ID is publish via Pubnub to the [subcribers](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/MainActivity.java#L170-216).
