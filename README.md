@@ -12,6 +12,36 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 - common   - contain some common jar's (reference library for RadioEye project)
 
 ```java
-int s = "JavaScript syntax highlighting";
+boolean smoothSlideTo(float slideOffset, int velocity,
+			Panelcallback callback) {
+	 
+		if (!mCanSlide) {
+			// Nothing to do.
+	 
+			return false;
+		}
+
+		final int topBound = getSlidingTop();
+		int y = mIsSlidingUp ? (int) (topBound + slideOffset * mSlideRange)
+				: (int) (topBound - slideOffset * mSlideRange);
+
+	 
+		if (mDragHelper.smoothSlideViewTo(mSlideableView,
+				mSlideableView.getLeft(), y)) {
+	 
+			setAllChildrenVisible();
+	 
+			ViewCompat.postInvalidateOnAnimation(this);
+	 
+			if (callback != null) {
+	 
+				callback.onCollapsFinish();
+		 
+			}
+
+			return true;
+		}
+		return false;
+	}
  
 ```
