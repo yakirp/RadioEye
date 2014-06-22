@@ -7,9 +7,9 @@ After login, visit [AirFunction.com](http://airfunction.com/) and sign in with t
 Upload some images, and publish them. If everything is OK, you will see them in the app.
 
 
-- RadioEye - main project
-- facebook - facebook library (reference library for RadioEye project)
-- common   - contain some common jar's (reference library for RadioEye project)
+- **RadioEye** - main project
+- **facebook** - facebook library (reference library for RadioEye project)
+- **common**   - contain some common jar's (reference library for RadioEye project)
 
 
 Everything work well until we leave the app (onPause) and return back (onResume).
