@@ -11,3 +11,7 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 - facebook - facebook library (reference library for RadioEye project)
 - common   - contain some common jar's (reference library for RadioEye project)
 
+```java
+int s = "JavaScript syntax highlighting";
+ 
+```
