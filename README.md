@@ -22,4 +22,9 @@ Then, the sliding panel stop working.
 Note: the code is from [here](https://github.com/umano/AndroidSlidingUpPanel)
  
  
+ 
+one more thing:
+
+i see that when [this](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L195) variable is False , the sliding is ok, but after onPause this variable turn to True, and the sliding dont work.
+I don't understand the exact purpose of this variable.
 
