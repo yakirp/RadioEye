@@ -7,7 +7,8 @@ RadioEye client for android.
 - **common**   - contain some common jar's (reference library for RadioEye project)
 
 
-When launching the app, you will be asking to login with your Facebook account.
+When launching the app, you will be asking to login with your Facebook account. 
+*Note that at the first app login, if no images publish yet you will see a blank white screen.*
 After login, visit [AirFunction.com](http://airfunction.com/) and sign in with the same Facebook account.
 Upload some images, and publish them. If everything is OK, you will see them in the app.
 
@@ -21,7 +22,7 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 **The app flow:**
 When upload and publish image from the web site, the image ID is publish via Pubnub to the [subcribers](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/MainActivity.java#L170-216).
 Each message from pubnub contain the image id and the image type (top,center,ad).
-the image is loaded to WebView.
+the image is loaded to a WebView.
 If the image is center, we slide up the panel (ad panel) for 2.5 sec, and silde it down, then the the user can see the center image.
 
 Everything work well until we leave the app (onPause) and return back (onResume).
