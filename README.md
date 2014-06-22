@@ -12,7 +12,12 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 - common   - contain some common jar's (reference library for RadioEye project)
 
 
-The problem start in  [SlidingUpPanelLayout.java](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java)
+Evry thing work well until we leave the app (onPause) and return back (onResume).
+Then, the sliding panel dont work.
+
+
+
+[SlidingUpPanelLayout.java](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L113)
 
 ```java
 boolean smoothSlideTo(float slideOffset, int velocity,
