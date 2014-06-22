@@ -17,7 +17,7 @@ Then, the sliding panel dont work.
 
 
 
-[SlidingUpPanelLayout.java](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L963-1000)
+[SlidingUpPanelLayout.java](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/ui/SlidingUpPanelLayout.java#L963-977)
 
 ```java
 boolean smoothSlideTo(float slideOffset, int velocity,
