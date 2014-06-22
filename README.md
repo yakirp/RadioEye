@@ -2,7 +2,7 @@ RadioEyeAndroid
 ===============
 RadioEye client for android.
 
-
 - RadioEye - main activity
-- facebook - facebook library
-- common   - contain some jar's for radioeye app
+- facebook - facebook library (reference library for RadioEye app)
+- common   - contain some jar's (reference library for RadioEye app)
+
