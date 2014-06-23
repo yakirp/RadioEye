@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 	private String CurrentUserFacebookId = null;
 	private RadioEyeClient radioClient;
 	private Context context;
-
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +52,8 @@ public class MainActivity extends Activity {
 	 
 
 		setContext(this);
+		
+		setRadioClient(new RadioEyeClient(this));
 
 	}
 
@@ -77,7 +79,7 @@ public class MainActivity extends Activity {
 
 		super.onResume();
 
-		setRadioClient(new RadioEyeClient(this));
+	 
 		
 		 
 		
@@ -88,15 +90,19 @@ public class MainActivity extends Activity {
 
 		// Show loading dialog -> The Dialog window will cancel only after web content loading finish. 
 		// need to change this logic.
-		getRadioClient().showLoadingDialog();
+		 
 
+		setCurrentUserFacebookId(getRadioClient().getAppPref().getSomeString("facebookID"));
+		
+		getRadioClient().showLoadingDialog();
+		
 		if (getCurrentUserFacebookId() == null
 				|| getCurrentUserFacebookId() == "") {
 			startFacebookLogin();
 		} else {
 			startRadioEye();
 		}
-
+ 
 	}
 
 	private void startFacebookLogin() {
@@ -146,6 +152,8 @@ public class MainActivity extends Activity {
 
 					Log.i(user.getName());
 
+					getRadioClient().getAppPref().saveSomeString("facebookId", user.getId());
+					
 					setCurrentUserFacebookId(user.getId());
 
 					startRadioEye();
@@ -243,6 +251,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		 
 
 	}
 
@@ -284,5 +293,8 @@ public class MainActivity extends Activity {
             super.onBackPressed();
         }
     }
+	
+	 
+	 
 	
 }
