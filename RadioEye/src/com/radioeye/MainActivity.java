@@ -34,7 +34,7 @@ import com.radioeye.utils.Log;
  * 
  * @author user
  * 
- */
+ */  
 public class MainActivity extends Activity {
 
 	private String CurrentUserFacebookId = null;
@@ -195,7 +195,9 @@ public class MainActivity extends Activity {
 				// full image url
 				incomingImage.setImageUrl(url);
 
-				getRadioClient().handleNewIncomingImage(incomingImage);
+				 getRadioClient().handleNewIncomingImage(incomingImage);
+				
+				
 
 			}
 

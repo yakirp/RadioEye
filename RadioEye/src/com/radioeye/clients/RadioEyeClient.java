@@ -15,6 +15,7 @@ import com.radioeye.datastructure.CurrentPublisherImagesFromServer;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
 import com.radioeye.ui.LoadingDialog;
 import com.radioeye.ui.SlidingUpPanelLayout;
+ 
 import com.radioeye.ui.SlidingUpPanelLayout.Panelcallback;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
@@ -83,6 +84,8 @@ public class RadioEyeClient {
 
 					loadImage(image.getImageUrl(), R.id.webview_center, true,
 							null);
+					
+			
 
 				}
 
@@ -273,8 +276,12 @@ public class RadioEyeClient {
 				if (isShowAd) {
 					System.err.println("==loadImage==2=====");
 					// expand the ad panel
-					getSlidingPanel().expandPane(new Panelcallback() {
-
+					
+					getSlidingPanel().expandPanel(new Panelcallback() {
+						
+						 
+					 
+  
 						@Override
 						public void onCollapsFinish() {
 							System.err.println("==loadImage==3=====");
@@ -306,9 +313,9 @@ public class RadioEyeClient {
 
 														@Override
 														public void run() {
-															getSlidingPanel()
-																	.collapsePane(
-																			new Panelcallback() {
+															getSlidingPanel().collapsePanel(new Panelcallback() {
+																
+																 
 
 																				@Override
 																				public void onCollapsFinish() {
