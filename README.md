@@ -20,7 +20,7 @@ Upload some images, and publish them. If everything is OK, you will see them in 
 *Only for checking , upload one top image , one ad image and some center images.*
 
 **The app flow:**
-When upload and publish image from the web site, the image ID is publish via Pubnub to the [subcribers](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/MainActivity.java#L170-216).
+After image publish from the web site, the image ID is publish via Pubnub to the [subcribers](https://github.com/yakirp/RadioEyeAndroid/blob/master/RadioEye/src/com/radioeye/MainActivity.java#L170-216).
 Each message from pubnub contain the image id and the image type (top,center,ad).
 the image is loaded to a WebView.
 If the image is center, we slide up the panel (ad panel) for 2.5 sec, and silde it down, then the the user can see the center image.
