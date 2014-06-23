@@ -79,6 +79,9 @@ public class MainActivity extends Activity {
 
 		setRadioClient(new RadioEyeClient(this));
 		
+		 
+		
+		
 		//TODO:: check network connection
 		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
