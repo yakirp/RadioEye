@@ -276,4 +276,13 @@ public class MainActivity extends Activity {
 		this.radioClient = radioClient;
 	}
 
+	@Override
+    public void onBackPressed() {
+        if (getRadioClient().getSlidingPanel() != null && getRadioClient().getSlidingPanel().isPanelExpanded() || getRadioClient().getSlidingPanel().isPanelAnchored()) {
+        	getRadioClient().getSlidingPanel().collapsePanel(null);
+        } else {
+            super.onBackPressed();
+        }
+    }
+	
 }
