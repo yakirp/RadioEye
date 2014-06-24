@@ -34,7 +34,7 @@ import com.radioeye.utils.Log;
  * 
  * @author user
  * 
- */  
+ */    
 public class MainActivity extends Activity {
 
 	private String CurrentUserFacebookId = null;
@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
 
 	 
 		
-		 
+		
 		
 		
 		//TODO:: check network connection
