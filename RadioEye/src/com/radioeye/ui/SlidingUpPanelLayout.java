@@ -640,7 +640,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
 		final int paddingLeft = getPaddingLeft();
 		final int paddingTop = getPaddingTop();
-
 		final int childCount = getChildCount();
 
 		if (ismFirstLayout()) {

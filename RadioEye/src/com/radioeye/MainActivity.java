@@ -38,8 +38,10 @@ import com.radioeye.utils.Log;
 public class MainActivity extends Activity {
 
 	private String CurrentUserFacebookId = null;
-	private RadioEyeClient radioClient;
+	 
 	private Context context;
+
+	private MainActivity activity;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +51,11 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.activity_main);
 
-	 
+	    activity = this;
 
 		setContext(this);
 		
-		setRadioClient(new RadioEyeClient(this));
+		 
 
 	}
 
@@ -92,9 +94,9 @@ public class MainActivity extends Activity {
 		// need to change this logic.
 		 
 
-		setCurrentUserFacebookId(getRadioClient().getAppPref().getSomeString("facebookID"));
+		setCurrentUserFacebookId(RadioEyeClient.with(this).getAppPref().getSomeString("facebookID"));
 		
-		getRadioClient().showLoadingDialog();
+		RadioEyeClient.with(this).showLoadingDialog();
 		
 		if (getCurrentUserFacebookId() == null
 				|| getCurrentUserFacebookId() == "") {
@@ -152,7 +154,7 @@ public class MainActivity extends Activity {
 
 					Log.i(user.getName());
 
-					getRadioClient().getAppPref().saveSomeString("facebookId", user.getId());
+					RadioEyeClient.with(activity).getAppPref().saveSomeString("facebookId", user.getId());
 					
 					setCurrentUserFacebookId(user.getId());
 
@@ -170,7 +172,7 @@ public class MainActivity extends Activity {
 	private void startRadioEye() {
 		// Get the publisher images from server
 		// and load them
-		getRadioClient().getAndLoadCurrentPublisherActiveImages(
+		RadioEyeClient.with(activity).getAndLoadCurrentPublisherActiveImages(
 				getCurrentUserFacebookId());
 
 		// init pubnub clinet
@@ -206,7 +208,7 @@ public class MainActivity extends Activity {
 				// full image url
 				incomingImage.setImageUrl(url);
 
-				getRadioClient().handleNewIncomingImage(incomingImage);
+				RadioEyeClient.with(activity).handleNewIncomingImage(incomingImage);
 				
 				
 
@@ -277,18 +279,12 @@ public class MainActivity extends Activity {
 		this.context = context;
 	}
 
-	public RadioEyeClient getRadioClient() {
-		return radioClient;
-	}
-
-	public void setRadioClient(RadioEyeClient radioClient) {
-		this.radioClient = radioClient;
-	}
+	 
 
 	@Override
     public void onBackPressed() {
-        if (getRadioClient().getSlidingPanel() != null && getRadioClient().getSlidingPanel().isPanelExpanded() || getRadioClient().getSlidingPanel().isPanelAnchored()) {
-        	getRadioClient().getSlidingPanel().collapsePanel(null);
+        if (RadioEyeClient.with(this).getSlidingPanel() != null && RadioEyeClient.with(this).getSlidingPanel().isPanelExpanded() || RadioEyeClient.with(this).getSlidingPanel().isPanelAnchored()) {
+        	RadioEyeClient.with(this).getSlidingPanel().collapsePanel(null);
         } else {
             super.onBackPressed();
         }

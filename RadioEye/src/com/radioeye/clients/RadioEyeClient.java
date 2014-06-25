@@ -35,7 +35,17 @@ public class RadioEyeClient {
 	private AppPreferences appPref;
 	private LoadingDialog loadingDialog;
 
-	public RadioEyeClient(Activity activity) {
+	private static RadioEyeClient instance;
+	
+	public static RadioEyeClient with(Activity activity) {
+		if (instance == null) {
+			instance = new RadioEyeClient(activity);
+		}
+		return instance;
+	}
+	
+	
+	private RadioEyeClient(Activity activity) {
 
 		super();
 		this.activity = activity;
@@ -138,7 +148,7 @@ public class RadioEyeClient {
 	/**
 	 * Init the sliding menu
 	 */
-	private void initSlidingMenu() {
+	//private void initSlidingMenu() {
 		// configure the SlidingMenu
 		// menu = new SlidingMenu(this.activity);
 		// menu.setMode(SlidingMenu.LEFT);
@@ -160,7 +170,7 @@ public class RadioEyeClient {
 		// menu.setFadeDegree(0.35f);
 		// menu.attachToActivity(this.activity, SlidingMenu.SLIDING_CONTENT);
 		// menu.setMenu(R.layout.gallery);
-	}
+//	}
 
 	/**
 	 * Load to webview images from json
@@ -409,5 +419,11 @@ public class RadioEyeClient {
 	public void setMainHandler(Handler mainHandler) {
 		this.mainHandler = mainHandler;
 	}
+
+
+	 
+
+
+	 
 
 }

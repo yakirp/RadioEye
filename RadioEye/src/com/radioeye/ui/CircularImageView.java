@@ -139,7 +139,7 @@ public class CircularImageView extends ImageView {
 		return (result + 2);
 	}
 
-	public Bitmap drawableToBitmap(Drawable drawable) {
+	private Bitmap drawableToBitmap(Drawable drawable) {
 		if (drawable == null) {
 			return null;
 		} else if (drawable instanceof BitmapDrawable) {
