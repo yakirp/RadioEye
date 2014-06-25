@@ -197,7 +197,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
      * If expand/collapse operations are invoked this state is modified. Used by
      * instance state save/restore.
      */
-    private boolean mFirstLayout = true;
+    private boolean mFirstLayout;
 
     private final Rect mTmpRect = new Rect();
 
@@ -266,29 +266,14 @@ public class SlidingUpPanelLayout extends ViewGroup {
         this(context, attrs, 0);
     }
 
-    private boolean lastValue = mFirstLayout;
+    private boolean lastValue = ismFirstLayout();
     
     public SlidingUpPanelLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         
         
-        new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while (true) {
-				
-					if (lastValue!=mFirstLayout) {
-						System.err.println("Change to: "+mFirstLayout);
-						lastValue = mFirstLayout;
-					
-					}  
-					
-				}  
-				
-			}
-		}).start();
+        
           
         if(isInEditMode()) {
             mShadowDrawable = null;
@@ -569,15 +554,13 @@ public class SlidingUpPanelLayout extends ViewGroup {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        System.err.println("onAttachedToWindow");
-        mFirstLayout = true;
+        setmFirstLayout(true);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        System.err.println("onDetachedFromWindow");
-        mFirstLayout = true;
+        setmFirstLayout(true);
     }
 
     @Override
@@ -652,78 +635,79 @@ public class SlidingUpPanelLayout extends ViewGroup {
         setMeasuredDimension(widthSize, heightSize);
     }
 
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+		final int paddingLeft = getPaddingLeft();
+		final int paddingTop = getPaddingTop();
+
+		final int childCount = getChildCount();
+
+		if (ismFirstLayout()) {
+			switch (mSlideState) {
+			case EXPANDED:
+				mSlideOffset = 1.0f;
+				break;
+			case ANCHORED:
+				mSlideOffset = mAnchorPoint;
+				break;
+			case HIDDEN:
+				int newTop = computePanelTopPosition(0.0f)
+						+ (mIsSlidingUp ? +mPanelHeight : -mPanelHeight);
+				mSlideOffset = computeSlideOffset(newTop);
+				break;
+			default:
+				mSlideOffset = 0.f;
+				break;
+			}
+		}
+
+		for (int i = 0; i < childCount; i++) {
+			final View child = getChildAt(i);
+
+			// Always layout the sliding view on the first layout
+			if (child.getVisibility() == GONE && (i == 0 || ismFirstLayout())) {
+				continue;
+			}
+
+			final int childHeight = child.getMeasuredHeight();
+			int childTop = paddingTop;
+
+			if (child == mSlideableView) {
+				childTop = computePanelTopPosition(mSlideOffset);
+			}
+
+			if (!mIsSlidingUp) {
+				if (child == mMainView && !mOverlayContent) {
+					childTop = computePanelTopPosition(mSlideOffset)
+							+ mSlideableView.getMeasuredHeight();
+				}
+			}
+			final int childBottom = childTop + childHeight;
+			final int childLeft = paddingLeft;
+			final int childRight = childLeft + child.getMeasuredWidth();
+
+			child.layout(childLeft, childTop, childRight, childBottom);
+		}
+
+		if (ismFirstLayout()) {
+			updateObscuredViewVisibility();
+		}
+
+		setmFirstLayout(false);
+
+	}
+
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-    	System.err.println("onLayout");
-        final int paddingLeft = getPaddingLeft();
-        final int paddingTop = getPaddingTop();
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		// Recalculate sliding panes and their details
 
-        final int childCount = getChildCount();
-        System.err.println("onLayout 1" +mFirstLayout);
-        if (mFirstLayout) {
-            switch (mSlideState) {
-            case EXPANDED:
-                mSlideOffset = 1.0f;
-                break;
-            case ANCHORED:
-                mSlideOffset = mAnchorPoint;
-                break;
-            case HIDDEN:
-                int newTop = computePanelTopPosition(0.0f) + (mIsSlidingUp ? +mPanelHeight : -mPanelHeight);
-                mSlideOffset = computeSlideOffset(newTop);
-                break;
-            default:
-                mSlideOffset = 0.f;
-                break;
-            }
-        }
+		if (h != oldh) {
 
-        for (int i = 0; i < childCount; i++) {
-            final View child = getChildAt(i);
-
-            // Always layout the sliding view on the first layout
-            if (child.getVisibility() == GONE && (i == 0 || mFirstLayout)) {
-                continue;
-            }
-
-            final int childHeight = child.getMeasuredHeight();
-            int childTop = paddingTop;
-
-            if (child == mSlideableView) {
-                childTop = computePanelTopPosition(mSlideOffset);
-            }
-
-            if (!mIsSlidingUp) {
-                if (child == mMainView && !mOverlayContent) {
-                    childTop = computePanelTopPosition(mSlideOffset) + mSlideableView.getMeasuredHeight();
-                }
-            }
-            final int childBottom = childTop + childHeight;
-            final int childLeft = paddingLeft;
-            final int childRight = childLeft + child.getMeasuredWidth();
-
-            child.layout(childLeft, childTop, childRight, childBottom);
-        }
-
-        System.err.println("onLayout 2" +mFirstLayout);
-        if (mFirstLayout) {
-            updateObscuredViewVisibility();
-        }
-        System.err.println("onLayout 3" +mFirstLayout);
-        mFirstLayout = false;
-        System.err.println("onLayout 4" +mFirstLayout);
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        // Recalculate sliding panes and their details
-        System.err.println("onSizeChanged 1");
-        if (h != oldh) {
-        	System.err.println("onSizeChanged 2");
-            mFirstLayout = true;
-        }
-    }
+			setmFirstLayout(true);
+		}
+	}
 
     /**
      * Set if the drag view can have its own touch events.  If set
@@ -861,14 +845,12 @@ public class SlidingUpPanelLayout extends ViewGroup {
     }
 
     private boolean expandPanel(View pane, int initialVelocity, float mSlideOffset) {
-    	System.err.println(mFirstLayout);
-       // return mFirstLayout || smoothSlideTo(mSlideOffset, initialVelocity);
-    	return smoothSlideTo(mSlideOffset, initialVelocity);
+    	 return ismFirstLayout() || smoothSlideTo(mSlideOffset, initialVelocity);
+    	 
     }
 
     private boolean collapsePanel(View pane, int initialVelocity) {
-    	 
-        return mFirstLayout || smoothSlideTo(0.0f, initialVelocity);
+    	 return ismFirstLayout() || smoothSlideTo(0.0f, initialVelocity);
     }
 
     /*
@@ -909,32 +891,33 @@ public class SlidingUpPanelLayout extends ViewGroup {
     }
 
     /**
-     * Expand the sliding pane if it is currently slideable. If first layout
-     * has already completed this will animate.
-     *
-     * @return true if the pane was slideable and is now expanded/in the process of expading
-     */
-    public boolean expandPanel(Panelcallback callback) {
-    	System.err.println("expandPanel");
-    	return expandPanel(1.0f);
-    }
+	 * Expand the sliding pane if it is currently slideable. If first layout has
+	 * already completed this will animate.
+	 * 
+	 * @return true if the pane was slideable and is now expanded/in the process
+	 *         of expading
+	 */
+	public boolean expandPanel(Panelcallback callback) {
+		return expandPanel(1.0f);
+	}
 
-    /**
-     * Partially expand the sliding panel up to a specific offset
-     *
-     * @param mSlideOffset Value between 0 and 1, where 0 is completely expanded.
-     * @return true if the pane was slideable and is now expanded/in the process of expanding
-     */
-    public boolean expandPanel(float mSlideOffset) {
-    	System.err.println("expandPanel 2");
-        if (mSlideableView == null || mSlideState == SlideState.EXPANDED)  
-        { 
-        System.err.println("return false;");
-        return false;
-        }
-        mSlideableView.setVisibility(View.VISIBLE);
-        return expandPanel(mSlideableView, 0, mSlideOffset);
-    }
+	/**
+	 * Partially expand the sliding panel up to a specific offset
+	 * 
+	 * @param mSlideOffset
+	 *            Value between 0 and 1, where 0 is completely expanded.
+	 * @return true if the pane was slideable and is now expanded/in the process
+	 *         of expanding
+	 */
+	public boolean expandPanel(float mSlideOffset) {
+
+		if (mSlideableView == null || mSlideState == SlideState.EXPANDED) {
+
+			return false;
+		}
+		mSlideableView.setVisibility(View.VISIBLE);
+		return expandPanel(mSlideableView, 0, mSlideOffset);
+	}
 
     /**
      * Check if the sliding panel in this layout is fully expanded.
@@ -1042,14 +1025,14 @@ public class SlidingUpPanelLayout extends ViewGroup {
      * @param velocity initial velocity in case of fling, or 0.
      */
     boolean smoothSlideTo(float slideOffset, int velocity) {
+    	System.err.println("smoothSlideTo");
         if (!isSlidingEnabled()) {
             // Nothing to do.
-        	System.err.println("Nothing to do");
+        	 
             return false;
         }
-        System.err.println(mFirstLayout);
+        System.err.println(ismFirstLayout());
         int panelTop = computePanelTopPosition(slideOffset);
-        System.err.println("panelTop "+panelTop);
         if (mDragHelper.smoothSlideViewTo(mSlideableView, mSlideableView.getLeft(), panelTop)) {
             setAllChildrenVisible();
             ViewCompat.postInvalidateOnAnimation(this);
@@ -1168,7 +1151,17 @@ public class SlidingUpPanelLayout extends ViewGroup {
         mSlideState = ss.mSlideState;
     }
 
-    private class DragHelperCallback extends ViewDragHelper.Callback {
+    public boolean ismFirstLayout() {
+    	System.err.println("mFirstLayout = "+mFirstLayout);
+		return mFirstLayout;
+	}
+
+	public void setmFirstLayout(boolean mFirstLayout) {
+		System.err.println("change to :"+mFirstLayout);
+		this.mFirstLayout = mFirstLayout;
+	}
+
+	private class DragHelperCallback extends ViewDragHelper.Callback {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {

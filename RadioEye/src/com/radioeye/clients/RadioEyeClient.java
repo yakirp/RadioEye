@@ -268,100 +268,100 @@ public class RadioEyeClient {
 	private void loadImage(final String url, final int webId,
 			final Boolean isShowAd, final TaskCallback callback) {
 		
-		getSlidingPanel().expandPanel(null);
+		 
 		
-//		postToUiThread(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				System.err.println("==loadImage==1=====");
-//				// if we need to show ad before loading image
-//				if (isShowAd) {
-//					System.err.println("==loadImage==2=====");
-//					// expand the ad panel
-//					
-//					getSlidingPanel().expandPanel(new Panelcallback() {
-//						
-//						 
-//					 
-//  
-//						@Override
-//						public void onCollapsFinish() {
-//							System.err.println("==loadImage==3=====");
-//							final long startTime = System.currentTimeMillis();
-//							// load the url to the webview
-//							WebViewUtils.loadImageUrlToWebView(
-//									(WebView) activity.findViewById(webId),
-//									url, new WebViewClient() {
-//
-//										public void onPageFinished(
-//												WebView view, String url) {
-//
-//											// After loading, we wait for some
-//											// milisec
-//											// before closing the ad panel
-//											new Thread(new Runnable() {
-//
-//												@Override
-//												public void run() {
-//													// we wait the ad minimum
-//													// time
-//													while (System
-//															.currentTimeMillis()
-//															- startTime <= AD_MINIMUM_SHOWING_TIME_IN_MILISECIME) {
-//
-//													}
-//													// now we close the ad panel
-//													postToUiThread(new Runnable() {
-//
-//														@Override
-//														public void run() {
-//															getSlidingPanel().collapsePanel(new Panelcallback() {
-//																
-//																 
-//
-//																				@Override
-//																				public void onCollapsFinish() {
-//																					if (callback != null) {
-//																						callback.onSuccess();
-//																					}
-//
-//																				};
-//
-//																			});
-//
-//														}
-//													});
-//
-//												}
-//
-//											}).start();
-//										}
-//									});
-//
-//						} // after sliding panel with the ad is up
-//
-//					}); //expandPane
-//
-//				} // if (isShowAd)
-//				else {
-//					// load the url to the webview with no ad
-//					WebViewUtils.loadImageUrlToWebView(
-//							(WebView) activity.findViewById(webId), url,
-//							new WebViewClient() {
-//
-//								public void onPageFinished(WebView view,
-//										String url) {
-//									if (callback != null) {
-//										callback.onSuccess();
-//									}
-//								}
-//							});
-//				}
-//
-//			}
-//		});
+		postToUiThread(new Runnable() {
 
+			@Override
+			public void run() {
+				System.err.println("==loadImage==1=====");
+				// if we need to show ad before loading image
+				if (isShowAd) {
+					System.err.println("==loadImage==2=====");
+					// expand the ad panel
+					
+					getSlidingPanel().expandPanel(new Panelcallback() {
+						
+						 
+					 
+  
+						@Override
+						public void onCollapsFinish() {
+							System.err.println("==loadImage==3=====");
+							final long startTime = System.currentTimeMillis();
+							// load the url to the webview
+							WebViewUtils.loadImageUrlToWebView(
+									(WebView) activity.findViewById(webId),
+									url, new WebViewClient() {
+
+										public void onPageFinished(
+												WebView view, String url) {
+
+											// After loading, we wait for some
+											// milisec
+											// before closing the ad panel
+											new Thread(new Runnable() {
+
+												@Override
+												public void run() {
+													// we wait the ad minimum
+													// time
+													while (System
+															.currentTimeMillis()
+															- startTime <= AD_MINIMUM_SHOWING_TIME_IN_MILISECIME) {
+
+													}
+													// now we close the ad panel
+													postToUiThread(new Runnable() {
+
+														@Override
+														public void run() {
+															getSlidingPanel().collapsePanel(new Panelcallback() {
+																
+																 
+
+																				@Override
+																				public void onCollapsFinish() {
+																					if (callback != null) {
+																						callback.onSuccess();
+																					}
+
+																				};
+
+																			});
+
+														}
+													});
+
+												}
+
+											}).start();
+										}
+									});
+
+						} // after sliding panel with the ad is up
+
+					}); //expandPane
+
+				} // if (isShowAd)
+				else {
+					// load the url to the webview with no ad
+					WebViewUtils.loadImageUrlToWebView(
+							(WebView) activity.findViewById(webId), url,
+							new WebViewClient() {
+
+								public void onPageFinished(WebView view,
+										String url) {
+									if (callback != null) {
+										callback.onSuccess();
+									}
+								}
+							});
+				} 
+			
+			}
+		});
+  
 	}    
 
 	private void postToUiThread(Runnable runnable) {
@@ -398,7 +398,7 @@ public class RadioEyeClient {
 	public void setSlidingPanel(SlidingUpPanelLayout slidingPanel) {
 		this.slidingPanel = slidingPanel;
 		
-		slidingPanel.setSlidingEnabled(false);
+		//slidingPanel.setSlidingEnabled(false);
 		
 	}
 

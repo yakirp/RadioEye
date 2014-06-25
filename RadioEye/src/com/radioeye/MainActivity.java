@@ -206,7 +206,7 @@ public class MainActivity extends Activity {
 				// full image url
 				incomingImage.setImageUrl(url);
 
-				 getRadioClient().handleNewIncomingImage(incomingImage);
+				getRadioClient().handleNewIncomingImage(incomingImage);
 				
 				
 
