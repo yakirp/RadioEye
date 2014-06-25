@@ -1,9 +1,11 @@
 package com.radioeye.utils;
 
 import android.annotation.SuppressLint;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -21,7 +23,7 @@ public class WebViewUtils {
 		//	WebView mWebView = (WebView) context.findViewById(webId);
 			mWebView.getSettings().setJavaScriptEnabled(true);
 			mWebView.getSettings().setBuiltInZoomControls(false);
-
+			mWebView.getSettings().setDefaultZoom(ZoomDensity.FAR);
 			mWebView.setWebViewClient(new WebViewClient() {
 
 				public void onPageFinished(WebView view, String url) {
@@ -51,6 +53,8 @@ public class WebViewUtils {
 				}
 			});
 
+		 
+			
 			mWebView.loadDataWithBaseURL(url,
 					"<html><center><img height=\"99%\" width=\"100%\" src=" + "'"
 							+ url + "'" + "></html>", "text/html", "utf-8", "");

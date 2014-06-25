@@ -127,7 +127,7 @@ public class MainActivity extends Activity {
 			public void onCompleted(GraphUser user, Response response) {
 
 				if (user != null) {
-
+   
 					Bundle params = new Bundle();
 					// make request to the /me API
 					params.putBoolean("redirect", false);
@@ -136,7 +136,7 @@ public class MainActivity extends Activity {
 					params.putString("width", "200");
 					new Request(Session.getActiveSession(), "/me/picture",
 							params, HttpMethod.GET, new Request.Callback() {
-
+ 
 								// callback after Graph API response with user
 								// object
 								@Override

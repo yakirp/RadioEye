@@ -117,7 +117,7 @@ public class RadioEyeClient {
 					final String json = HttpClient
 							.getContentFromServer(GET_PUBLISHER_IMAGES_BASE_URL
 									+ publisherId);
-
+  
 					postToUiThread(new Runnable() {
 
 						@Override

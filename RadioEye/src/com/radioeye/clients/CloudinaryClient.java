@@ -20,7 +20,7 @@ public class CloudinaryClient {
 			return new CloudinaryClient();
 		}
 		return instance;
-	}
+	} 
 
 	private CloudinaryClient() {
 		super();
