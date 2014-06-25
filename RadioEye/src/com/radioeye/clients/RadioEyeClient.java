@@ -27,7 +27,7 @@ public class RadioEyeClient {
 	private static final String BASE_URL = RadioEyeApp.getBaseUrl();
 	private static final String GET_PUBLISHER_IMAGES_BASE_URL = BASE_URL
 			+ "/server/php/getUserCurrentImages.php?userId=";
-	private SlidingUpPanelLayout slidingPanel;
+	 
 	private Handler mainHandler;
 
 	private Activity activity;
@@ -35,25 +35,17 @@ public class RadioEyeClient {
 	private AppPreferences appPref;
 	private LoadingDialog loadingDialog;
 
-	private static RadioEyeClient instance;
-	
-	public static RadioEyeClient with(Activity activity) {
-		if (instance == null) {
-			instance = new RadioEyeClient(activity);
-		}
-		return instance;
-	}
+ 
 	
 	
-	private RadioEyeClient(Activity activity) {
+	public RadioEyeClient(Activity activity) {
 
 		super();
 		this.activity = activity;
 		// set UI thread
 		setMainHandler(new Handler(Looper.getMainLooper()));
 
-		setSlidingPanel((SlidingUpPanelLayout) activity
-				.findViewById(R.id.sliding_layout));
+		 
 
 		/* Sliding menu : Not is use at this moment */
 		// initSlidingMenu();
@@ -77,7 +69,7 @@ public class RadioEyeClient {
 	 * 
 	 * @param image
 	 */
-	public void handleNewIncomingImage(final NewImageMessageFromPublisher image) {
+	public void handleNewIncomingImage(final NewImageMessageFromPublisher image , final SlidingUpPanelLayout panel) {
 		postToUiThread(new Runnable() {
 
 			@Override
@@ -85,14 +77,14 @@ public class RadioEyeClient {
 
 				if (image.getImageType().equals("top")) {
 
-					loadImage(image.getImageUrl(), R.id.webview_top, false,
+					loadImage(image.getImageUrl(), R.id.webview_top, false,panel,
 							null);
 
 				}
 
 				if (image.getImageType().equals("center")) {
 
-					loadImage(image.getImageUrl(), R.id.webview_center, true,
+					loadImage(image.getImageUrl(), R.id.webview_center, true,panel,
 							null);
 					
 			
@@ -101,7 +93,7 @@ public class RadioEyeClient {
 
 				if (image.getImageType().equals("ad")) {
 
-					loadImage(image.getImageUrl(), R.id.webview_ad, false, null);
+					loadImage(image.getImageUrl(), R.id.webview_ad, false,panel, null);
 
 				}
 			}
@@ -115,7 +107,7 @@ public class RadioEyeClient {
 	 * @param publisherId
 	 *            that we want to load his images
 	 */
-	public void getAndLoadCurrentPublisherActiveImages(final String publisherId) {
+	public void getAndLoadCurrentPublisherActiveImages(final String publisherId , final SlidingUpPanelLayout panel) {
 		new Thread(new Runnable() {
 
 			@Override
@@ -131,7 +123,7 @@ public class RadioEyeClient {
 						@Override
 						public void run() {
 
-							handleCurrnetublisherImages(json);
+							handleCurrnetublisherImages(json,panel);
 
 						}
 					});
@@ -178,7 +170,7 @@ public class RadioEyeClient {
 	 * @param json
 	 *            contain the publisher images key
 	 */
-	private void handleCurrnetublisherImages(String json) {
+	private void handleCurrnetublisherImages(String json , final SlidingUpPanelLayout panel) {
 
 		final CurrentPublisherImagesFromServer allImages = new Gson().fromJson(
 				json, CurrentPublisherImagesFromServer.class);
@@ -190,7 +182,7 @@ public class RadioEyeClient {
 		final boolean[] loadedImages = { false, false, false };
 
 		// Load the top image
-		loadImage(url, R.id.webview_top, false, new TaskCallback() {
+		loadImage(url, R.id.webview_top, false,panel, new TaskCallback() {
 
 			@Override
 			public void onSuccess() {
@@ -210,7 +202,7 @@ public class RadioEyeClient {
 		// Load Ad image
 		url = CloudinaryClient.getInstance().generateWebPUrl(allImages.getAd());
 
-		loadImage(url, R.id.webview_ad, false, new TaskCallback() {
+		loadImage(url, R.id.webview_ad, false,panel, new TaskCallback() {
 
 			@Override
 			public void onSuccess() {
@@ -231,7 +223,7 @@ public class RadioEyeClient {
 		url = CloudinaryClient.getInstance().generateWebPUrl(
 				allImages.getCenter());
 
-		loadImage(url, R.id.webview_center, false, new TaskCallback() {
+		loadImage(url, R.id.webview_center, false, panel,new TaskCallback() {
 
 			@Override
 			public void onSuccess() {
@@ -276,7 +268,7 @@ public class RadioEyeClient {
 	 * @param callback to client
 	 */
 	private void loadImage(final String url, final int webId,
-			final Boolean isShowAd, final TaskCallback callback) {
+			final Boolean isShowAd, final SlidingUpPanelLayout panel , final TaskCallback callback ) {
 		
 		 
 		
@@ -290,7 +282,7 @@ public class RadioEyeClient {
 					System.err.println("==loadImage==2=====");
 					// expand the ad panel
 					
-					getSlidingPanel().expandPanel(new Panelcallback() {
+					panel.expandPanel(new Panelcallback() {
 						
 						 
 					 
@@ -326,7 +318,7 @@ public class RadioEyeClient {
 
 														@Override
 														public void run() {
-															getSlidingPanel().collapsePanel(new Panelcallback() {
+															panel.collapsePanel(new Panelcallback() {
 																
 																 
 
@@ -401,16 +393,9 @@ public class RadioEyeClient {
 		this.loadingDialog = loadingDialog;
 	}
 
-	public SlidingUpPanelLayout getSlidingPanel() {
-		return slidingPanel;
-	}
+	 
 
-	public void setSlidingPanel(SlidingUpPanelLayout slidingPanel) {
-		this.slidingPanel = slidingPanel;
-		
-		//slidingPanel.setSlidingEnabled(false);
-		
-	}
+	 
 
 	public Handler getMainHandler() {
 		return mainHandler;

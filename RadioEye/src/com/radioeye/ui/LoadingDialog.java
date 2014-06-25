@@ -33,7 +33,12 @@ public class LoadingDialog {
 			progDailog = createProgressDialog(activity);
 			progDailog.show();
 		} else {
-			progDailog.show();
+//			if(!((Activity) activity).isFinishing())
+//			{
+				progDailog.show();
+			//}
+			
+		 
 		}
 
 	}

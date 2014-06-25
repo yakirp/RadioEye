@@ -6,7 +6,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
+ 
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
@@ -36,7 +36,7 @@ public class PubnubClient {
 	private Pubnub pubnub;
 	private static PubnubClient instance;
 	private Map<String, PubnubCallback> listeners = new HashMap<String, PubnubCallback>();
-	private Gson gson;
+ 
 
 	public static PubnubClient getInstane() {
 		if (instance == null) {
@@ -54,7 +54,7 @@ public class PubnubClient {
 		pubnub = new Pubnub("demo", "demo", "", false);
 
 		// pubnub.setUUID(UserData.getInstance().getUserId());
-		setGson(new Gson());
+	 
 
 	}
 
@@ -259,12 +259,6 @@ public class PubnubClient {
 		this.listeners = listeners;
 	}
 
-	public Gson getGson() {
-		return gson;
-	}
-
-	public void setGson(Gson gson) {
-		this.gson = gson;
-	}
+ 
 
 }
