@@ -9,6 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +28,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.gson.Gson;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.nineoldandroids.view.animation.AnimatorProxy;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
@@ -36,6 +40,7 @@ import com.radioeye.clients.PubnubClient;
 import com.radioeye.clients.PubnubClient.PubnubCallback;
 import com.radioeye.clients.RadioEyeClient;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
+import com.radioeye.ui.SampleListFragment;
 import com.radioeye.ui.SlidingUpPanelLayout;
 import com.radioeye.ui.SlidingUpPanelLayout.PanelSlideListener;
 import com.radioeye.utils.AppPreferences;
@@ -47,7 +52,7 @@ import com.radioeye.utils.Log;
  * @author user
  * 
  */
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity  {
 	private SlidingUpPanelLayout slidingPanel;
 	private String CurrentUserFacebookId = null;
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
@@ -55,6 +60,7 @@ public class MainActivity extends Activity {
 	private RadioEyeClient radioEyeClient;
 
 	private MainActivity activity;
+	private SlidingMenu menu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +79,8 @@ public class MainActivity extends Activity {
 		setRadioEyeClient(new RadioEyeClient(activity));
 
 		setSlidingPanel((SlidingUpPanelLayout) findViewById(R.id.sliding_layout));
-		
-		 
+		  
+		 getSlidingPanel().setPanelHeight(0);
 		 
 		 getSlidingPanel().setPanelSlideListener(new PanelSlideListener() {
 	            @Override
@@ -112,7 +118,29 @@ public class MainActivity extends Activity {
 	            setActionBarTranslation(-actionBarHeight);//will "hide" an ActionBar
 	        }
 	        
+	        
+	     // configure the SlidingMenu
+			menu = new SlidingMenu(this);
+			menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+			menu.setShadowWidthRes(R.dimen.shadow_width);
+			menu.setShadowDrawable(R.drawable.shadow);
+			menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+			menu.setFadeDegree(0.35f);
+			menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+			menu.setMenu(R.layout.menu_frame);
+		 
+			getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.menu_frame, new SampleListFragment())
+			.commit();
+		 
+			 
+		 
 
+	 
+
+		 
+	        
 	}    
 	
 	
@@ -355,6 +383,11 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
+		
+		if (menu.isMenuShowing()) {
+			menu.showContent();
+		}
+		
 		if (getSlidingPanel() != null && getSlidingPanel().isPanelExpanded()
 				|| getSlidingPanel().isPanelAnchored()) {
 			getSlidingPanel().collapsePanel(null);
