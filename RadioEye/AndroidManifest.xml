@@ -17,10 +17,7 @@
         android:icon="@drawable/radioicon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <service
-            android:name="com.radioeye.MediaObserver"
-            android:label="MediaObserver" >
-        </service>
+         
 
         <activity
             android:name="com.radioeye.MainActivity"

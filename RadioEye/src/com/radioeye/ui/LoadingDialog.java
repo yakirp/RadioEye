@@ -33,12 +33,11 @@ public class LoadingDialog {
 			progDailog = createProgressDialog(activity);
 			progDailog.show();
 		} else {
-//			if(!((Activity) activity).isFinishing())
-//			{
-				progDailog.show();
-			//}
-			
-		 
+			// if(!((Activity) activity).isFinishing())
+			// {
+			progDailog.show();
+			// }
+
 		}
 
 	}
@@ -70,7 +69,10 @@ public class LoadingDialog {
 	private Bitmap mIcon_val;
 
 	public void close() {
-		progDailog.dismiss();
+		try {
+			progDailog.dismiss();
+		} catch (Throwable t) {
+		}
 	}
 
 	public void updateLoadingProfileImage(final ProgressDialog dialog,

@@ -7,10 +7,13 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,6 +25,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.gson.Gson;
+import com.nineoldandroids.view.animation.AnimatorProxy;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
@@ -33,6 +37,7 @@ import com.radioeye.clients.PubnubClient.PubnubCallback;
 import com.radioeye.clients.RadioEyeClient;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
 import com.radioeye.ui.SlidingUpPanelLayout;
+import com.radioeye.ui.SlidingUpPanelLayout.PanelSlideListener;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
 
@@ -45,7 +50,7 @@ import com.radioeye.utils.Log;
 public class MainActivity extends Activity {
 	private SlidingUpPanelLayout slidingPanel;
 	private String CurrentUserFacebookId = null;
-
+	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
 	private Context context;
 	private RadioEyeClient radioEyeClient;
 
@@ -55,10 +60,12 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
 		setContentView(R.layout.activity_main);
-
+  
 		activity = this;
 
 		setContext(this);
@@ -66,8 +73,80 @@ public class MainActivity extends Activity {
 		setRadioEyeClient(new RadioEyeClient(activity));
 
 		setSlidingPanel((SlidingUpPanelLayout) findViewById(R.id.sliding_layout));
+		
+		 
+		 
+		 getSlidingPanel().setPanelSlideListener(new PanelSlideListener() {
+	            @Override
+	            public void onPanelSlide(View panel, float slideOffset) {
+	                 
+	                setActionBarTranslation(getSlidingPanel().getCurrentParalaxOffset());
+	            }
 
-	}
+	            @Override     
+	            public void onPanelExpanded(View panel) {
+	              //  Log.i(TAG, "onPanelExpanded");
+
+	            }  
+
+	            @Override
+	            public void onPanelCollapsed(View panel) {
+	             //   Log.i(TAG, "onPanelCollapsed");
+
+	            }
+
+	            @Override
+	            public void onPanelAnchored(View panel) {
+	             //   Log.i(TAG, "onPanelAnchored");
+	            }
+
+	            @Override
+	            public void onPanelHidden(View panel) {
+	             //   Log.i(TAG, "onPanelHidden");
+	            }
+	        });
+		
+		 boolean actionBarHidden = savedInstanceState != null && savedInstanceState.getBoolean(SAVED_STATE_ACTION_BAR_HIDDEN, false);
+	        if (actionBarHidden) {
+	            int actionBarHeight = getActionBarHeight();
+	            setActionBarTranslation(-actionBarHeight);//will "hide" an ActionBar
+	        }
+	        
+
+	}    
+	
+	
+	 private int getActionBarHeight(){
+	        int actionBarHeight = 0;
+	        TypedValue tv = new TypedValue();
+	        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+	            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+	        }
+	        return actionBarHeight;
+	    }
+	 
+    public void setActionBarTranslation(float y) {
+        // Figure out the actionbar height
+        int actionBarHeight = getActionBarHeight();
+        // A hack to add the translation to the action bar
+        ViewGroup content = ((ViewGroup) findViewById(android.R.id.content).getParent());
+        int children = content.getChildCount();
+        for (int i = 0; i < children; i++) {
+            View child = content.getChildAt(i);
+            if (child.getId() != android.R.id.content) {
+                if (y <= -actionBarHeight) {
+                    child.setVisibility(View.GONE);
+                } else {
+                    child.setVisibility(View.VISIBLE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        child.setTranslationY(y);
+                    } else {
+                        AnimatorProxy.wrap(child).setTranslationY(y);
+                    }
+                }
+            }
+        }
+    }
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -99,7 +178,7 @@ public class MainActivity extends Activity {
 
 		// TODO:: check network connection
 
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		 
 
 		// Show loading dialog -> The Dialog window will cancel only after web
 		// content loading finish.
@@ -108,7 +187,7 @@ public class MainActivity extends Activity {
 		setCurrentUserFacebookId(getRadioEyeClient().getAppPref()
 				.getSomeString("facebookID"));
 
-		getRadioEyeClient().showLoadingDialog();
+	//	getRadioEyeClient().showLoadingDialog();
 
 		if (getCurrentUserFacebookId() == null
 				|| getCurrentUserFacebookId() == "") {
@@ -236,7 +315,7 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -248,7 +327,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-
+		outState.putBoolean(SAVED_STATE_ACTION_BAR_HIDDEN, getSlidingPanel().isPanelExpanded());
 	}
 
 	@Override
