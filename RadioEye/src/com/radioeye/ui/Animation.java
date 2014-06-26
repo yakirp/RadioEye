@@ -14,7 +14,7 @@ public class Animation {
 	
 	public static ObjectAnimator nope(View view) {
 	    int delta = view.getResources().getDimensionPixelOffset(10);
-
+  
 	    PropertyValuesHolder pvhTranslateX = PropertyValuesHolder.ofKeyframe(View.TRANSLATION_X,
 	            Keyframe.ofFloat(0f, 0),
 	            Keyframe.ofFloat(.10f, -delta),
@@ -29,7 +29,7 @@ public class Animation {
 	    return ObjectAnimator.ofPropertyValuesHolder(view, pvhTranslateX).
 	            setDuration(500);
 	}
-	
+	 
 	
 	private static ObjectAnimator tada(View view, float shakeFactor) {
 

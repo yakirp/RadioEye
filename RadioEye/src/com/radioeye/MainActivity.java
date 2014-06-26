@@ -128,14 +128,15 @@ public class MainActivity extends FragmentActivity  {
 			menu.setFadeDegree(0.35f);
 			menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 			menu.setMenu(R.layout.menu_frame);
-		 
+			   
 			getSupportFragmentManager()
 			.beginTransaction()
 			.replace(R.id.menu_frame, new SampleListFragment())
 			.commit();
 		 
 			 
-		 
+   
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 
 	 
 
@@ -346,6 +347,20 @@ public class MainActivity extends FragmentActivity  {
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+
+	    int itemId = item.getItemId();
+	    switch (itemId) {
+	    case android.R.id.home:
+	      menu.toggle();
+	        break;
+
+	    }
+
+	    return true;
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 

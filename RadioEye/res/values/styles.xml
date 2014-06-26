@@ -3,15 +3,16 @@
     <style name="AppBaseTheme" parent="android:Theme.Light"></style>
 
     <style name="AppTheme" parent="AppBaseTheme">
-       
-         <item name="android:windowBackground">@color/background_window</item> 
-          <item name="android:actionBarStyle">@style/ActionBarStyle</item> 
+        <item name="android:windowBackground">@color/background_window</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
     </style>
 
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:icon">@drawable/radioicon</item>
         <item name="android:background">#FF666666</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/radioicon</item>
+        
     </style>
 
     <style name="GenericProgressBackground" parent="android:Theme">
