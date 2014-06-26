@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
 	            public void onPanelExpanded(View panel) {
 	              //  Log.i(TAG, "onPanelExpanded");
 
-	            }  
+	            }      
 
 	            @Override
 	            public void onPanelCollapsed(View panel) {
