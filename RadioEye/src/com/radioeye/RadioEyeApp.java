@@ -1,5 +1,7 @@
 package com.radioeye;
 
+import android.content.Context;
+
 public class RadioEyeApp {
 
 	private enum Mode {
@@ -11,6 +13,8 @@ public class RadioEyeApp {
 	public static final boolean IN_RELEASE_MODE = MODE == Mode.RELEASE;
 	public static final boolean IN_DEVELOPMENT_MODE = MODE == Mode.DEVELOPMENT;
 
+	private static Context appContext;
+	
 	public static String getBaseUrl() {
 
 		if (IN_RELEASE_MODE) {
@@ -22,6 +26,14 @@ public class RadioEyeApp {
 			return "http://airfunction.com";
 		}
 
+	}
+
+	public static Context getAppContext() {
+		return appContext;
+	}
+
+	public static void setAppContext(Context appContext) {
+		appContext = appContext;
 	}
 
 }

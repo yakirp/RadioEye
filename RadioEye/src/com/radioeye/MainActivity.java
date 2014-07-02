@@ -21,6 +21,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.GraphUserCallback;
@@ -39,6 +41,7 @@ import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.PubnubClient;
 import com.radioeye.clients.PubnubClient.PubnubCallback;
 import com.radioeye.clients.RadioEyeClient;
+import com.radioeye.clients.VolleyClient;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
 import com.radioeye.ui.SampleListFragment;
 import com.radioeye.ui.SlidingUpPanelLayout;
@@ -62,6 +65,8 @@ public class MainActivity extends FragmentActivity  {
 	private MainActivity activity;
 	private SlidingMenu menu;
 
+	 private ImageLoader mImageLoader;
+	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,10 +77,14 @@ public class MainActivity extends FragmentActivity  {
 		
 		setContentView(R.layout.activity_main);
   
+		
+		
 		activity = this;
 
 		setContext(this);
 
+		RadioEyeApp.setAppContext(this);
+		
 		setRadioEyeClient(new RadioEyeClient(activity));
 
 		setSlidingPanel((SlidingUpPanelLayout) findViewById(R.id.sliding_layout));
@@ -100,7 +109,7 @@ public class MainActivity extends FragmentActivity  {
 	             //   Log.i(TAG, "onPanelCollapsed");
 
 	            }
-
+  
 	            @Override
 	            public void onPanelAnchored(View panel) {
 	             //   Log.i(TAG, "onPanelAnchored");
@@ -140,10 +149,15 @@ public class MainActivity extends FragmentActivity  {
 
 	 
 
-		 
+			
+			 mImageLoader = VolleyClient.getInstance().getImageLoader();
+			 
+		   
+			 NetworkImageView avatar = (NetworkImageView) findViewById(R.id.twitter_avatar);
+		     avatar.setImageUrl("http://someurl.com/image.png",mImageLoader);
 	        
 	}    
-	
+ 
 	
 	 private int getActionBarHeight(){
 	        int actionBarHeight = 0;
