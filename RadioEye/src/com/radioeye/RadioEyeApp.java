@@ -1,8 +1,11 @@
 package com.radioeye;
 
+import com.radioeye.clients.RequestManager;
+
+import android.app.Application;
 import android.content.Context;
 
-public class RadioEyeApp {
+public class RadioEyeApp extends Application {
 
 	private enum Mode {
 		DEVELOPMENT, RELEASE
@@ -28,12 +31,20 @@ public class RadioEyeApp {
 
 	}
 
+	@Override
+	public void onCreate() {
+		// RequestManager initialization
+		System.err.println("----------------------------------");
+        RequestManager.getInstance(getApplicationContext());
+		super.onCreate();
+	}
+
 	public static Context getAppContext() {
 		return appContext;
 	}
 
 	public static void setAppContext(Context appContext) {
-		appContext = appContext;
+		RadioEyeApp.appContext = appContext;
 	}
 
 }

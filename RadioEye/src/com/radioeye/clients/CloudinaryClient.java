@@ -8,7 +8,7 @@ import com.cloudinary.Cloudinary;
 
 
 public class CloudinaryClient {
-  
+   
 	private static final String AI_SECRET = "RzZU6gdbyVMBQjvDLF701Q7hWFQ";
 	private static final String API_KEY = "528447269881241";
 	private static final String CLOUD_NAME = "dhwxfvlrn";

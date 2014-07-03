@@ -21,8 +21,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.GraphUserCallback;
@@ -41,6 +44,7 @@ import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.PubnubClient;
 import com.radioeye.clients.PubnubClient.PubnubCallback;
 import com.radioeye.clients.RadioEyeClient;
+import com.radioeye.clients.RequestManager;
 import com.radioeye.clients.VolleyClient;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
 import com.radioeye.ui.SampleListFragment;
@@ -83,7 +87,7 @@ public class MainActivity extends FragmentActivity  {
 
 		setContext(this);
 
-		RadioEyeApp.setAppContext(this);
+		RadioEyeApp.setAppContext(getApplicationContext());
 		
 		setRadioEyeClient(new RadioEyeClient(activity));
 
@@ -143,21 +147,27 @@ public class MainActivity extends FragmentActivity  {
 			.replace(R.id.menu_frame, new SampleListFragment())
 			.commit();
 		 
-			 
-   
+			   
+    
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 
-	 
-
-			
-			 mImageLoader = VolleyClient.getInstance().getImageLoader();
+			 RequestManager.getInstance(getApplicationContext());
 			 
-		   
-			 NetworkImageView avatar = (NetworkImageView) findViewById(R.id.twitter_avatar);
-		     avatar.setImageUrl("http://someurl.com/image.png",mImageLoader);
-	        
+			 
+			 RequestManager.getInstance().doRequest().login();
+
+			 
+			 mImageLoader =  RequestManager.getInstance().doRequest().getmImageLoader();
+			 
+			   
+			 
+			 
+			 
+			
+			 
+	          
 	}    
- 
+    
 	
 	 private int getActionBarHeight(){
 	        int actionBarHeight = 0;

@@ -6,6 +6,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.android.volley.toolbox.NetworkImageView;
 import com.common.TaskCallback;
 import com.google.gson.Gson;
 
@@ -292,13 +298,37 @@ public class RadioEyeClient {
 							System.err.println("==loadImage==3=====");
 							final long startTime = System.currentTimeMillis();
 							// load the url to the webview
-							WebViewUtils.loadImageUrlToWebView(
-									(WebView) activity.findViewById(webId),
-									url, new WebViewClient() {
+//							NetworkImageView imgAvatar = (NetworkImageView) activity.findViewById(webId);
+//							imgAvatar.setImageUrl(url, RequestManager.getInstance().doRequest().getmImageLoader());
+							
+							RequestManager.getInstance().doRequest()
+									.loadImage(url, new ImageListener() {
 
-										public void onPageFinished(
-												WebView view, String url) {
+										@Override
+										public void onErrorResponse(
+												VolleyError error) {
+											 Log.e("Image Load Error: " + error.getMessage());
+											   Log.e( url);
+											   Log.e( String.valueOf(error.networkResponse.statusCode));
+error.printStackTrace();
+										}
 
+										@Override
+										public void onResponse(
+												ImageContainer response,
+												boolean isImmediate) {
+											ImageView avatar = (ImageView) activity
+													.findViewById(webId);
+
+											avatar.setImageBitmap(response
+													.getBitmap());
+											
+											
+											while (avatar.getDrawable() == null) {
+												 
+												
+											}
+											
 											// After loading, we wait for some
 											// milisec
 											// before closing the ad panel
@@ -338,8 +368,11 @@ public class RadioEyeClient {
 												}
 
 											}).start();
+
 										}
 									});
+							
+ 
 
 						} // after sliding panel with the ad is up
 
@@ -348,17 +381,42 @@ public class RadioEyeClient {
 				} // if (isShowAd)
 				else {
 					// load the url to the webview with no ad
-					WebViewUtils.loadImageUrlToWebView(
-							(WebView) activity.findViewById(webId), url,
-							new WebViewClient() {
+//					NetworkImageView imgAvatar = (NetworkImageView) activity.findViewById(webId);
+//					imgAvatar.setImageUrl(url, RequestManager.getInstance().doRequest().getmImageLoader());
+				 
+					
+					RequestManager.getInstance().doRequest()
+					.loadImage(url, new ImageListener() {
 
-								public void onPageFinished(WebView view,
-										String url) {
-									if (callback != null) {
-										callback.onSuccess();
-									}
-								}
-							});
+						@Override
+						public void onErrorResponse(
+								VolleyError error) {
+							   Log.e("Image Load Error: " + error.getMessage());
+							   Log.e( url);
+							   Log.e( String.valueOf(error.networkResponse.statusCode));
+							   error.printStackTrace();
+						}
+
+						@Override
+						public void onResponse(
+								ImageContainer response,
+								boolean isImmediate) {
+							ImageView avatar = (ImageView) activity
+									.findViewById(webId);
+
+							avatar.setImageBitmap(response
+									.getBitmap());
+							
+							
+							 
+							
+							if (callback != null) {
+								callback.onSuccess();
+							}
+							 
+
+						}
+					});
 				} 
 			
 			}

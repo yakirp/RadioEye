@@ -10,7 +10,7 @@ import java.net.URLConnection;
 /**
  * 
  * @author user
- *   
+ *     
  */  
 public class HttpClient {
 
