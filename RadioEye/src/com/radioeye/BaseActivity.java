@@ -17,7 +17,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.radioeye.ui.SampleListFragment;
 
 public class BaseActivity extends SlidingFragmentActivity {
-
+ 
 	private int mTitleRes;
 	protected ListFragment mFrag;
 
