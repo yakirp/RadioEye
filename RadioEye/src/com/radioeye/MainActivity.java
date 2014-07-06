@@ -137,7 +137,7 @@ public class MainActivity extends FragmentActivity  {
 			menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 			menu.setShadowWidthRes(R.dimen.shadow_width);
 			menu.setShadowDrawable(R.drawable.shadow);
-			menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		    menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 			menu.setFadeDegree(0.35f);
 			menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 			menu.setMenu(R.layout.menu_frame);
@@ -149,7 +149,7 @@ public class MainActivity extends FragmentActivity  {
 		 
 			   
     
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+		     getActionBar().setDisplayHomeAsUpEnabled(true);
 
 			 RequestManager.getInstance(getApplicationContext());
 			 
@@ -198,9 +198,9 @@ public class MainActivity extends FragmentActivity  {
                     }
                 }
             }
-        }
+        }  
     }
-
+    
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -240,7 +240,7 @@ public class MainActivity extends FragmentActivity  {
 		setCurrentUserFacebookId(getRadioEyeClient().getAppPref()
 				.getSomeString("facebookID"));
 
-	//	getRadioEyeClient().showLoadingDialog();
+	 	getRadioEyeClient().showLoadingDialog();
 
 		if (getCurrentUserFacebookId() == null
 				|| getCurrentUserFacebookId() == "") {

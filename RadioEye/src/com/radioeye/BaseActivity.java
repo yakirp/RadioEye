@@ -24,15 +24,15 @@ public class BaseActivity extends SlidingFragmentActivity {
 	public BaseActivity(int titleRes) {
 		mTitleRes = titleRes;
 	}
-
+    
 	@Override  
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-  
+ 
 		setTitle(mTitleRes);   
   
-	 
-		
+	   
+		  
 		// set the Behind View
 		setBehindContentView(R.layout.menu_frame);
 		if (savedInstanceState == null) {
