@@ -309,8 +309,8 @@ public class RadioEyeClient {
 												VolleyError error) {
 											 Log.e("Image Load Error: " + error.getMessage());
 											   Log.e( url);
-											   Log.e( String.valueOf(error.networkResponse.statusCode));
-error.printStackTrace();
+				  							   Log.e( String.valueOf(error.networkResponse.statusCode));
+											   error.printStackTrace();
 										}
 
 										@Override
