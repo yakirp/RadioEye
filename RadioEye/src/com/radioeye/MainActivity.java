@@ -168,7 +168,7 @@ public class MainActivity extends FragmentActivity  {
 	          
 	}    
     
-	
+	  
 	 private int getActionBarHeight(){
 	        int actionBarHeight = 0;
 	        TypedValue tv = new TypedValue();
