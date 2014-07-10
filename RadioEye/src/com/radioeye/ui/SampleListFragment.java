@@ -14,6 +14,8 @@ import com.radioeye.utils.Log;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,10 +28,13 @@ public class SampleListFragment extends ListFragment {
 
 	 private SlidingMenu slidingMenu;
 private MenuCallback callback;
+private SwipeRefreshLayout swipeLayout;
 	 
 	 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.list, null);
+		
+		 
 	}
 
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -47,6 +52,30 @@ private MenuCallback callback;
 			}
 		});
 		
+		 swipeLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_container);
+		    swipeLayout.setOnRefreshListener(new OnRefreshListener() {
+				
+				@Override
+				public void onRefresh() {
+					RequestManager.getInstance().doRequest().getJson("http://airfunction.com/server/php/testrds.php", new Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+							   Log.i(response.toString());
+				                parseJSON(response);
+				             
+				                swipeLayout.setRefreshing(false);
+						}
+					});
+					
+				}
+			});
+		    swipeLayout.setColorScheme(android.R.color.holo_blue_bright, 
+		            android.R.color.holo_green_light, 
+		            android.R.color.holo_orange_light, 
+		            android.R.color.holo_red_light);
+ 
+		
 		
 		
 		 
@@ -62,8 +91,9 @@ private MenuCallback callback;
 
 	                    JSONObject item = items.getJSONObject(i);
 	                    Log.i(item.optString("username"));
-	                   
+	                  
 	                    adapter.add(new publisherItems(item.optString("title"), android.R.drawable.ic_menu_search,item.optString("userfacebookid") ));
+	                   
 	            }
 	            
 	               

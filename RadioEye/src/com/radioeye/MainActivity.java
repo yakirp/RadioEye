@@ -1,32 +1,25 @@
 package com.radioeye;
 
 import java.util.Map;
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
-import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.GraphUserCallback;
@@ -38,15 +31,12 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.nineoldandroids.view.animation.AnimatorProxy;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
-import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 import com.radioeye.clients.CloudinaryClient;
 import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.PubnubClient;
-import com.radioeye.clients.PubnubClient.PubnubCallback;
 import com.radioeye.clients.RadioEyeClient;
 import com.radioeye.clients.RequestManager;
-import com.radioeye.clients.VolleyClient;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
 import com.radioeye.ui.SampleListFragment;
 import com.radioeye.ui.SlidingUpPanelLayout;
@@ -69,9 +59,10 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 
 	private MainActivity activity;
 	private SlidingMenu menu;
-
+  
 	 private ImageLoader mImageLoader;
-	 
+	private SwipeRefreshLayout swipeLayout;
+	   
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,6 +82,10 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 		RadioEyeApp.setAppContext(getApplicationContext());
 		
 		pubnub = new Pubnub("demo", "demo", "", false);
+		
+		
+	 
+		
 		
 		setRadioEyeClient(new RadioEyeClient(activity));
 
@@ -116,7 +111,7 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 	             //   Log.i(TAG, "onPanelCollapsed");
 
 	            }
-  
+    
 	            @Override
 	            public void onPanelAnchored(View panel) {
 	             //   Log.i(TAG, "onPanelAnchored");
@@ -125,14 +120,14 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 	            @Override
 	            public void onPanelHidden(View panel) {
 	             //   Log.i(TAG, "onPanelHidden");
-	            }
-	        });
+	            }  
+	        });  
 		
 		 boolean actionBarHidden = savedInstanceState != null && savedInstanceState.getBoolean(SAVED_STATE_ACTION_BAR_HIDDEN, false);
 	        if (actionBarHidden) {
 	            int actionBarHeight = getActionBarHeight();
 	            setActionBarTranslation(-actionBarHeight);//will "hide" an ActionBar
-	        }
+	        }  
 	        
 	        SampleListFragment s = new SampleListFragment();	        
 	      
@@ -154,8 +149,21 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 			  s.setSlidingMenu(menu);
 			  s.setCallback(this);
 			  
-			  
-    
+			  /*
+			  swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+			    swipeLayout.setOnRefreshListener(new OnRefreshListener() {
+					
+					@Override
+					public void onRefresh() {
+					Log.i("Refreh finish");
+						
+					}
+				});
+			    swipeLayout.setColorScheme(android.R.color.holo_blue_bright, 
+			            android.R.color.holo_green_light, 
+			            android.R.color.holo_orange_light, 
+			            android.R.color.holo_red_light);
+    */
 		     getActionBar().setDisplayHomeAsUpEnabled(true);
 
 			 RequestManager.getInstance(getApplicationContext());

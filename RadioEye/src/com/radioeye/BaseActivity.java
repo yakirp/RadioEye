@@ -20,7 +20,7 @@ public class BaseActivity extends SlidingFragmentActivity {
  
 	private int mTitleRes;
 	protected ListFragment mFrag;
-
+  
 	public BaseActivity(int titleRes) {
 		mTitleRes = titleRes;
 	}
