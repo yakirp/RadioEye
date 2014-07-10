@@ -63,10 +63,10 @@ private MenuCallback callback;
 	                    JSONObject item = items.getJSONObject(i);
 	                    Log.i(item.optString("username"));
 	                   
-	                    adapter.add(new publisherItems(item.optString("username"), android.R.drawable.ic_menu_search,item.optString("userfacebookid") ));
+	                    adapter.add(new publisherItems(item.optString("title"), android.R.drawable.ic_menu_search,item.optString("userfacebookid") ));
 	            }
 	            
-	             
+	               
 	    		 
 	    		setListAdapter(adapter);
 	    		
@@ -130,6 +130,8 @@ private MenuCallback callback;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);
 			}
+			
+			
 			ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
 			icon.setImageResource(getItem(position).iconRes);
 			TextView title = (TextView) convertView.findViewById(R.id.row_title);
@@ -137,7 +139,7 @@ private MenuCallback callback;
 			
 			final String channel =getItem(position).getChannel();
 			
-			title.setOnClickListener(new OnClickListener() {
+			convertView.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {

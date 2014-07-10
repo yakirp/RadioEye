@@ -81,7 +81,7 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		setContentView(R.layout.activity_main);
-  
+		  AppPreferences.getInstance(getApplicationContext());
 		
 		
 		activity = this;
@@ -89,6 +89,8 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 		setContext(this);
 
 		RadioEyeApp.setAppContext(getApplicationContext());
+		
+		pubnub = new Pubnub("demo", "demo", "", false);
 		
 		setRadioEyeClient(new RadioEyeClient(activity));
 
@@ -248,7 +250,7 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 //		setCurrentUserFacebookId(getRadioEyeClient().getAppPref()
 //				.getSomeString("facebookID"));
 
-	 	getRadioEyeClient().showLoadingDialog();
+	// 	getRadioEyeClient().showLoadingDialog();
 
 //		if (getCurrentUserFacebookId() == null
 //				|| getCurrentUserFacebookId() == "") {
@@ -256,7 +258,7 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 //		} else {
 //			startRadioEye();
 //		}
-		 
+		 startRadioEye();
 
 	}
 
@@ -324,7 +326,7 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 
 	private void startRadioEye() {
 		
-		getRadioEyeClient().showLoadingDialog();
+		 
 		
 		// Get the publisher images from server
 		// and load them
@@ -334,6 +336,9 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 		String localChannel = AppPreferences.getInstance().getSomeString("lastChannel");
 		
 		if (!localChannel.equals("")) {
+			
+			getRadioEyeClient().showLoadingDialog();
+			
 		getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
 				localChannel, getSlidingPanel());
 
@@ -344,7 +349,7 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 
 	private void initPubnub(String channel) {
 
-		pubnub = new Pubnub("demo", "demo", "", false);
+		 
 
 		try {
 			pubnub.subscribe(channel, new Callback() {
