@@ -1,12 +1,18 @@
 package com.radioeye.clients;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
@@ -36,6 +42,29 @@ public class RequestProxy {
 					}
 				}));
 
+	}
+
+	public void getJson(String url, final Listener<JSONObject> callback) {
+
+	 
+
+	 
+
+		
+		JsonObjectRequest req = new JsonObjectRequest(url, null,
+			       new Response.Listener<JSONObject>() {
+			           @Override
+			           public void onResponse(JSONObject response) {
+			               callback.onResponse(response);
+			           }
+			       }, new Response.ErrorListener() {
+			           @Override
+			           public void onErrorResponse(VolleyError error) {
+			              Log.i("Error: "+ error.getMessage());
+			           }
+			       });
+		
+		mRequestQueue.add(req);
 	}
 
 	public void login() {

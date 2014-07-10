@@ -1,9 +1,9 @@
 package com.radioeye;
 
-import com.radioeye.clients.RequestManager;
-
 import android.app.Application;
 import android.content.Context;
+
+import com.radioeye.clients.RequestManager;
 
 public class RadioEyeApp extends Application {
 
@@ -16,6 +16,8 @@ public class RadioEyeApp extends Application {
 	public static final boolean IN_RELEASE_MODE = MODE == Mode.RELEASE;
 	public static final boolean IN_DEVELOPMENT_MODE = MODE == Mode.DEVELOPMENT;
 
+	 
+	
 	private static Context appContext;
 	
 	public static String getBaseUrl() {
@@ -46,5 +48,7 @@ public class RadioEyeApp extends Application {
 	public static void setAppContext(Context appContext) {
 		RadioEyeApp.appContext = appContext;
 	}
+
+	 
 
 }

@@ -20,7 +20,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-  
+
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
@@ -59,7 +60,7 @@ import com.radioeye.utils.Log;
  * @author user
  * 
  */
-public class MainActivity extends FragmentActivity  {
+public class MainActivity extends FragmentActivity  implements MenuCallback {
 	private SlidingUpPanelLayout slidingPanel;
 	private String CurrentUserFacebookId = null;
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
@@ -131,7 +132,8 @@ public class MainActivity extends FragmentActivity  {
 	            setActionBarTranslation(-actionBarHeight);//will "hide" an ActionBar
 	        }
 	        
-	        
+	        SampleListFragment s = new SampleListFragment();	        
+	      
 	     // configure the SlidingMenu
 			menu = new SlidingMenu(this);
 			menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
@@ -144,10 +146,13 @@ public class MainActivity extends FragmentActivity  {
 			   
 			getSupportFragmentManager()
 			.beginTransaction()
-			.replace(R.id.menu_frame, new SampleListFragment())
+			.replace(R.id.menu_frame, s)
 			.commit();
 		 
-			   
+			  s.setSlidingMenu(menu);
+			  s.setCallback(this);
+			  
+			  
     
 		     getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -224,6 +229,8 @@ public class MainActivity extends FragmentActivity  {
 
 	}
 
+	 
+	 
 	@Override
 	protected void onResume() {
 
@@ -232,7 +239,8 @@ public class MainActivity extends FragmentActivity  {
 		// TODO:: check network connection
 
 		 
-
+		
+		
 		// Show loading dialog -> The Dialog window will cancel only after web
 		// content loading finish.
 		// need to change this logic.
@@ -319,10 +327,10 @@ public class MainActivity extends FragmentActivity  {
 		// Get the publisher images from server
 		// and load them
 		getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
-				getCurrentUserFacebookId(), getSlidingPanel());
+				new AppPreferences(this).getSomeString("lastChannel"), getSlidingPanel());
 
 		// init pubnub clinet
-		initPubnub(getCurrentUserFacebookId());
+		initPubnub(new AppPreferences(this).getSomeString("lastChannel"));
 	}
 
 	private void initPubnub(String channel) {
@@ -449,6 +457,20 @@ public class MainActivity extends FragmentActivity  {
 
 	public void setSlidingPanel(SlidingUpPanelLayout slidingPanel) {
 		this.slidingPanel = slidingPanel;
+	}
+
+
+	@Override
+	public void onItemSelect(String Channel) {
+
+		menu.toggle();
+		pubnub.unsubscribe(new AppPreferences(this).getSomeString("lastChannel"));
+		 
+		new AppPreferences(this).saveSomeString("lastChannel", Channel);		
+		
+		startRadioEye();
+ 
+		
 	}
 
 }
