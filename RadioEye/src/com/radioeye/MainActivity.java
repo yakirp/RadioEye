@@ -245,17 +245,17 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 		// content loading finish.
 		// need to change this logic.
 
-		setCurrentUserFacebookId(getRadioEyeClient().getAppPref()
-				.getSomeString("facebookID"));
+//		setCurrentUserFacebookId(getRadioEyeClient().getAppPref()
+//				.getSomeString("facebookID"));
 
 	 	getRadioEyeClient().showLoadingDialog();
 
-		if (getCurrentUserFacebookId() == null
-				|| getCurrentUserFacebookId() == "") {
-			startFacebookLogin();
-		} else {
-			startRadioEye();
-		}
+//		if (getCurrentUserFacebookId() == null
+//				|| getCurrentUserFacebookId() == "") {
+//			startFacebookLogin();
+//		} else {
+//			startRadioEye();
+//		}
 		 
 
 	}
@@ -291,11 +291,10 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 											obj = new JSONObject(g.get("data")
 													.toString());
 
-											new AppPreferences(getContext())
-													.saveSomeString(
-															"profile_image",
-															obj.getString("url"));
-
+											AppPreferences.getInstance().saveSomeString("profile_image",
+													obj.getString("url"));
+											
+											 
 											// radioClient.updateLoadingProfileImage(obj.getString("url"));
 										} catch (JSONException e) {
 
@@ -307,8 +306,8 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 
 					Log.i(user.getName());
 
-					getRadioEyeClient().getAppPref().saveSomeString(
-							"facebookId", user.getId());
+//					getRadioEyeClient().getAppPref().saveSomeString(
+//							"facebookId", user.getId());
 
 					setCurrentUserFacebookId(user.getId());
 
@@ -324,13 +323,23 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 	}
 
 	private void startRadioEye() {
+		
+		getRadioEyeClient().showLoadingDialog();
+		
 		// Get the publisher images from server
 		// and load them
+		
+		 
+		
+		String localChannel = AppPreferences.getInstance().getSomeString("lastChannel");
+		
+		if (!localChannel.equals("")) {
 		getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
-				new AppPreferences(this).getSomeString("lastChannel"), getSlidingPanel());
+				localChannel, getSlidingPanel());
 
 		// init pubnub clinet
-		initPubnub(new AppPreferences(this).getSomeString("lastChannel"));
+		initPubnub(localChannel);
+		}
 	}
 
 	private void initPubnub(String channel) {
@@ -464,9 +473,11 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 	public void onItemSelect(String Channel) {
 
 		menu.toggle();
-		pubnub.unsubscribe(new AppPreferences(this).getSomeString("lastChannel"));
+		pubnub.unsubscribe(AppPreferences.getInstance().getSomeString("lastChannel"));
 		 
-		new AppPreferences(this).saveSomeString("lastChannel", Channel);		
+		AppPreferences.getInstance().saveSomeString("lastChannel", Channel);
+		
+	 
 		
 		startRadioEye();
  

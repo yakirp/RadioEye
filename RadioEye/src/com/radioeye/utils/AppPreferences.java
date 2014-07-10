@@ -12,7 +12,25 @@ public class AppPreferences {
 	private SharedPreferences _sharedPrefs;
 	private Editor _prefsEditor;
 
-	public AppPreferences(Context context) {
+	private static AppPreferences instance;
+
+	
+	public static AppPreferences getInstance( ) {
+		 
+
+		return instance;
+	}
+	
+	
+	public static AppPreferences getInstance(Context context) {
+		if (instance == null) {
+			instance = new AppPreferences(context);
+		}
+
+		return instance;
+	}
+
+	private AppPreferences(Context context) {
 		this._sharedPrefs = context.getSharedPreferences(APP_SHARED_PREFS,
 				Activity.MODE_PRIVATE);
 		this._prefsEditor = _sharedPrefs.edit();
@@ -25,6 +43,10 @@ public class AppPreferences {
 	public void saveSomeString(String key, String text) {
 		_prefsEditor.putString(key, text);
 		_prefsEditor.commit();
+	}
+
+	public static void setInstance(AppPreferences instance) {
+		AppPreferences.instance = instance;
 	}
 
 }

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.radioeye.clients.RequestManager;
+import com.radioeye.utils.AppPreferences;
 
 public class RadioEyeApp extends Application {
 
@@ -38,6 +39,7 @@ public class RadioEyeApp extends Application {
 		// RequestManager initialization
 		System.err.println("----------------------------------");
         RequestManager.getInstance(getApplicationContext());
+        AppPreferences.getInstance(getApplicationContext());
 		super.onCreate();
 	}
 

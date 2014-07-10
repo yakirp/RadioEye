@@ -18,13 +18,13 @@ public class LoadingDialog {
 
 	private Activity activity;
 	private ProgressDialog progDailog;
-	private AppPreferences appPref;
+	 
 
 	public LoadingDialog(Activity activity) {
 		super();
 
 		this.activity = activity;
-		appPref = new AppPreferences(activity);
+		 
 
 	}
 
@@ -53,7 +53,9 @@ public class LoadingDialog {
 		dialog.setCancelable(false);
 		dialog.setContentView(R.layout.progressdialog);
 
-		String url = appPref.getSomeString("profile_image");
+	 
+		
+		String url = AppPreferences.getInstance().getSomeString("profile_image");
 		if (url != "") {
 			try {
 				updateLoadingProfileImage(dialog, url);

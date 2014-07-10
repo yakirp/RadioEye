@@ -24,7 +24,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 	public BaseActivity(int titleRes) {
 		mTitleRes = titleRes;
 	}
-    
+      
 	@Override  
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

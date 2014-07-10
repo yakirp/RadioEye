@@ -41,7 +41,7 @@ public class RadioEyeClient {
 
 	private SlidingMenu slidingMenu;
 	
-	private AppPreferences appPref;
+	 
 	private LoadingDialog loadingDialog;
 
  
@@ -59,7 +59,7 @@ public class RadioEyeClient {
 		/* Sliding menu : Not is use at this moment */
 		// initSlidingMenu();
 
-		setAppPref(new AppPreferences(activity));
+	 
 
 		setLoadingDialog(new LoadingDialog(activity));
 
@@ -438,13 +438,7 @@ public class RadioEyeClient {
   
 	}
 
-	public AppPreferences getAppPref() {
-		return appPref;
-	}
-
-	public void setAppPref(AppPreferences appPref) {
-		this.appPref = appPref;
-	}
+	 
 
 	public LoadingDialog getLoadingDialog() {
 		return loadingDialog;
