@@ -14,6 +14,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.NetworkImageView;
 import com.common.TaskCallback;
 import com.google.gson.Gson;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import com.radioeye.R;
 import com.radioeye.RadioEyeApp;
@@ -38,6 +39,8 @@ public class RadioEyeClient {
 
 	private Activity activity;
 
+	private SlidingMenu slidingMenu;
+	
 	private AppPreferences appPref;
 	private LoadingDialog loadingDialog;
 
@@ -461,6 +464,16 @@ public class RadioEyeClient {
 
 	public void setMainHandler(Handler mainHandler) {
 		this.mainHandler = mainHandler;
+	}
+
+
+	public SlidingMenu getSlidingMenu() {
+		return slidingMenu;
+	}
+
+
+	public void setSlidingMenu(SlidingMenu slidingMenu) {
+		this.slidingMenu = slidingMenu;
 	}
 
 
