@@ -13,7 +13,7 @@ public class RequestManager {
     public RequestProxy doRequest() {
         return mRequestProxy;
     }
-
+ 
     // This method should be called first to do singleton initialization
     public static synchronized RequestManager getInstance(Context context) {
         if (instance == null) {
@@ -21,7 +21,7 @@ public class RequestManager {
         }
         return instance;
     }
-
+  
     public static synchronized RequestManager getInstance() {
         if (instance == null) {
             throw new IllegalStateException(RequestManager.class.getSimpleName() +

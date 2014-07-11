@@ -11,7 +11,7 @@ public class Animation {
 	    return tada(view, 1f);
 	}
 
-	
+	 
 	public static ObjectAnimator nope(View view) {
 	    int delta = view.getResources().getDimensionPixelOffset(10);
   

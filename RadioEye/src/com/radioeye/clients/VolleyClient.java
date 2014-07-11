@@ -7,12 +7,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.radioeye.RadioEyeApp;
-
+  
 public class VolleyClient{
     private static VolleyClient mInstance = null;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-
+   
     private VolleyClient(){
         mRequestQueue = Volley.newRequestQueue(RadioEyeApp.getAppContext());
         mImageLoader = new ImageLoader(this.mRequestQueue, new ImageLoader.ImageCache() {

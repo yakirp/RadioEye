@@ -33,7 +33,7 @@ public class RadioEyeApp extends Application {
 		}
 
 	}
-
+ 
 	@Override
 	public void onCreate() {
 		// RequestManager initialization

@@ -14,7 +14,7 @@ import com.pubnub.api.PubnubException;
 import com.radioeye.utils.Log;
 
 public class PubnubClient {
-
+  
 	public interface PubnubCallback {
 
 		public void onMessage(String channel, String msg);

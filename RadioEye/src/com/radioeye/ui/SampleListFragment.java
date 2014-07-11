@@ -4,10 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.NetworkImageView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.radioeye.MenuCallback;
 import com.radioeye.R;
 import com.radioeye.clients.RequestManager;
+import com.radioeye.clients.RequestProxy;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
 
@@ -92,7 +94,7 @@ private SwipeRefreshLayout swipeLayout;
 	                    JSONObject item = items.getJSONObject(i);
 	                    Log.i(item.optString("username"));
 	                  
-	                    adapter.add(new publisherItems(item.optString("title"), android.R.drawable.ic_menu_search,item.optString("userfacebookid") ));
+	                    adapter.add(new publisherItems(item.optString("title"), item.optString("imageurl"),item.optString("userfacebookid") ,item.optString("description")));
 	                   
 	            }
 	            
@@ -129,24 +131,40 @@ private SwipeRefreshLayout swipeLayout;
 
 	public class publisherItems {
 		private String publisherName;
-		private String Channel;
-		public int iconRes;
-		public publisherItems(String tag, int iconRes,String Channel) {
+		private String channel;
+		private String imageUrl;
+		private String description;
+	 
+		public publisherItems(String tag, String imageUrl,String Channel , String description) {
 			this.setPublisherName(tag); 
-			this.iconRes = iconRes;
-			this.Channel = Channel;
+			this.setImageUrl(imageUrl);
+			this.channel = Channel;
+			this.setDescription(description);
+			
 		}
 		public String getChannel() {
-			return Channel;
+			return channel;
 		}
 		public void setChannel(String channel) {
-			Channel = channel;
+			channel = channel;
 		}
 		public String getPublisherName() {
 			return publisherName;
 		}
 		public void setPublisherName(String publisherName) {
 			this.publisherName = publisherName;
+		}
+		public String getImageUrl() {
+			return imageUrl;
+		}
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
 		}
 	}
 
@@ -161,11 +179,14 @@ private SwipeRefreshLayout swipeLayout;
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);
 			}
 			
-			
-			ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
-			icon.setImageResource(getItem(position).iconRes);
-			TextView title = (TextView) convertView.findViewById(R.id.row_title);
+			 
+			 NetworkImageView imageUrl = (NetworkImageView) convertView.findViewById(R.id.image_item);
+			 imageUrl.setImageUrl(getItem(position).getImageUrl(),RequestManager.getInstance().doRequest().getmImageLoader());
+			 
+			TextView title = (TextView) convertView.findViewById(R.id.lbl_contact_name_item);
+			TextView description = (TextView) convertView.findViewById(R.id.lbl_contact_description_item);
 			title.setText(getItem(position).getPublisherName());
+			description.setText(getItem(position).getDescription());
 			
 			final String channel =getItem(position).getChannel();
 			
