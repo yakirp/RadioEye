@@ -14,6 +14,14 @@ import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -94,7 +102,7 @@ private SwipeRefreshLayout swipeLayout;
 	                    JSONObject item = items.getJSONObject(i);
 	                    Log.i(item.optString("username"));
 	                  
-	                    adapter.add(new publisherItems(item.optString("title"), item.optString("imageurl"),item.optString("userfacebookid") ,item.optString("description")));
+	                    adapter.add(new publisherItems(item.optString("title"), item.optString("imageurl"),item.optString("userfacebookid") ,item.optString("description"),item.optString("online"),item.optString("offlineimageurl")));
 	                   
 	            }
 	            
@@ -133,13 +141,17 @@ private SwipeRefreshLayout swipeLayout;
 		private String publisherName;
 		private String channel;
 		private String imageUrl;
+		private String offlineimageUrl;
 		private String description;
+		private String online;
 	 
-		public publisherItems(String tag, String imageUrl,String Channel , String description) {
+		public publisherItems(String tag, String imageUrl,String Channel , String description , String online,String offlineimageurl) {
 			this.setPublisherName(tag); 
 			this.setImageUrl(imageUrl);
 			this.channel = Channel;
 			this.setDescription(description);
+			this.setOnline(online);
+			this.setOfflineimageUrl(offlineimageurl);
 			
 		}
 		public String getChannel() {
@@ -166,10 +178,28 @@ private SwipeRefreshLayout swipeLayout;
 		public void setDescription(String description) {
 			this.description = description;
 		}
+		 
+		public String getOfflineimageUrl() {
+			return offlineimageUrl;
+		}
+		public void setOfflineimageUrl(String offlineimageUrl) {
+			this.offlineimageUrl = offlineimageUrl;
+		}
+		public String getOnline() {
+			return online;
+		}
+		public void setOnline(String online) {
+			this.online = online;
+		}
 	}
 
 	public class SampleAdapter extends ArrayAdapter<publisherItems> {
 
+	 
+		
+	 
+		
+		
 		public SampleAdapter(Context context) {
 			super(context, 0);
 		}
@@ -180,13 +210,32 @@ private SwipeRefreshLayout swipeLayout;
 			}
 			
 			 
+			String url = getItem(position).getOnline().equalsIgnoreCase("t") ? getItem(position).getImageUrl() : getItem(position).getOfflineimageUrl();
+			
 			 NetworkImageView imageUrl = (NetworkImageView) convertView.findViewById(R.id.image_item);
-			 imageUrl.setImageUrl(getItem(position).getImageUrl(),RequestManager.getInstance().doRequest().getmImageLoader());
+			 imageUrl.setImageUrl(url,RequestManager.getInstance().doRequest().getmImageLoader());
+			 
+		 
+			 
 			 
 			TextView title = (TextView) convertView.findViewById(R.id.lbl_contact_name_item);
+		 
+			
+			
+			
+			
 			TextView description = (TextView) convertView.findViewById(R.id.lbl_contact_description_item);
 			title.setText(getItem(position).getPublisherName());
 			description.setText(getItem(position).getDescription());
+			
+			 if (getItem(position).getOnline().equalsIgnoreCase("f")) {
+					title.setTextColor(Color.GRAY);
+					description.setTextColor(Color.GRAY);
+			 } 
+			 
+			 
+			 
+			
 			
 			final String channel =getItem(position).getChannel();
 			
