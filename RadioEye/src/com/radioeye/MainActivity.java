@@ -44,8 +44,6 @@ import com.radioeye.ui.SlidingUpPanelLayout.PanelSlideListener;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
 import com.amazonaws.android.mobileanalytics.*;
-import com.amazonaws.android.mobileanalytics.AnalyticsOptions;
-import com.amazonaws.android.mobileanalytics.InitializationException;
 import com.amazonaws.android.auth.CognitoCredentialsProvider;
 
  
@@ -117,15 +115,24 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 		
 		
 	 
-		CognitoCredentialsProvider cognitoProvider = new CognitoCredentialsProvider(
+		final CognitoCredentialsProvider cognitoProvider = new CognitoCredentialsProvider(
 				this, // get the context for the current activity
 			    "961397298997",
 			    "us-east-1:835b8b9c-4983-4fd3-a7e5-8cfe6488736b",
 			    "arn:aws:iam::961397298997:role/Cognito_RadioEyePollUnauth_DefaultRole",
 			    "arn:aws:iam::961397298997:role/Cognito_RadioEyePollAuth_DefaultRole"
 			);
-		
-		cognitoProvider.getIdentityId();
+		 
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				cognitoProvider.getIdentityId();
+			
+				
+			}
+		}).start();
+	 
 		
 		 try {
 		        analytics = new AmazonMobileAnalytics(
@@ -433,7 +440,7 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 					// We get only the image id from server , so we init the
 					// full image url
 					
-					if (incomingImage.getImageType()=="center") {
+					if (incomingImage.getImageType().equalsIgnoreCase("center")) {
 						AdView(incomingImage.getImageUrl(),AppPreferences.getInstance().getSomeString("lastChannel"));
 					}
 					
