@@ -165,7 +165,7 @@ public class BasicNetwork implements Network {
         }
     }
 
-    /**
+    /**  
      * Attempts to prepare the request for a retry. If there are no more attempts remaining in the
      * request's retry policy, a timeout exception is thrown.
      * @param request The request to use.

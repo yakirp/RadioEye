@@ -43,7 +43,12 @@ import com.radioeye.ui.SlidingUpPanelLayout;
 import com.radioeye.ui.SlidingUpPanelLayout.PanelSlideListener;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
+import com.amazonaws.android.mobileanalytics.*;
+import com.amazonaws.android.mobileanalytics.AnalyticsOptions;
+import com.amazonaws.android.mobileanalytics.InitializationException;
+import com.amazonaws.android.auth.CognitoCredentialsProvider;
 
+ 
 /**
  * Main RadioEye activity
  * 
@@ -51,6 +56,8 @@ import com.radioeye.utils.Log;
  * 
  */
 public class MainActivity extends FragmentActivity  implements MenuCallback {
+	
+	private AmazonMobileAnalytics analytics;
 	private SlidingUpPanelLayout slidingPanel;
 	private String CurrentUserFacebookId = null;
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
@@ -63,6 +70,31 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 	 private ImageLoader mImageLoader;
 	private SwipeRefreshLayout swipeLayout;
 	   
+	
+	/**
+	 * This method gets called when the player completes a level.
+	 * @param levelName the name of the level
+	 * @param difficulty the difficulty setting
+	 * @param timeToComplete the time to complete the level in seconds
+	 * @param playerState the winning/losing state of the player
+	 */
+	public void AdView(String imageId, String publisher ) {
+	        
+	    //Create a Level Complete event with some attributes and metrics(measurements)
+	    //Attributes and metrics can be added using with statements
+	    AnalyticsEvent levelCompleteEvent = analytics.getEventClient().createEvent("AdView")
+	            .withAttribute("ImageId", imageId)
+	            .withAttribute("PublishereId", publisher)
+	            .withMetric("n", 1.0);
+	   
+	       
+	 
+	    //Record the Level Complete event
+	    analytics.getEventClient().recordEvent(levelCompleteEvent);
+	    
+	    Log.i("Event created");
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,8 +117,26 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 		
 		
 	 
+		CognitoCredentialsProvider cognitoProvider = new CognitoCredentialsProvider(
+				this, // get the context for the current activity
+			    "961397298997",
+			    "us-east-1:835b8b9c-4983-4fd3-a7e5-8cfe6488736b",
+			    "arn:aws:iam::961397298997:role/Cognito_RadioEyePollUnauth_DefaultRole",
+			    "arn:aws:iam::961397298997:role/Cognito_RadioEyePollAuth_DefaultRole"
+			);
 		
+		cognitoProvider.getIdentityId();
 		
+		 try {
+		        analytics = new AmazonMobileAnalytics(
+		                cognitoProvider,
+		                getApplicationContext(),
+		                "RadioEye"
+		        );
+		    } catch(InitializationException ex) {
+		            Log.e("Failed to initialize Amazon Mobile Analytics "+ex);
+		    }
+		 
 		setRadioEyeClient(new RadioEyeClient(activity));
 
 		setSlidingPanel((SlidingUpPanelLayout) findViewById(R.id.sliding_layout));
@@ -235,6 +285,12 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 
 		pubnub.unsubscribe(getCurrentUserFacebookId());
 
+		 if(analytics != null) {
+		        analytics.getSessionClient().pauseSession();
+		            //Attempt to send any events that have been recorded to the Mobile Analytics service.
+		        analytics.getEventClient().submitEvents();
+		    }
+		 
 		// finish();
 
 	}
@@ -248,7 +304,9 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 
 		// TODO:: check network connection
 
-		 
+		if(analytics != null)  {
+	        analytics.getSessionClient().resumeSession();
+	    }
 		
 		
 		// Show loading dialog -> The Dialog window will cancel only after web
@@ -374,8 +432,13 @@ public class MainActivity extends FragmentActivity  implements MenuCallback {
 
 					// We get only the image id from server , so we init the
 					// full image url
+					
+					if (incomingImage.getImageType()=="center") {
+						AdView(incomingImage.getImageUrl(),AppPreferences.getInstance().getSomeString("lastChannel"));
+					}
+					
 					incomingImage.setImageUrl(url);
-
+				 
 					getRadioEyeClient().handleNewIncomingImage(incomingImage,
 							getSlidingPanel());
 
