@@ -45,25 +45,20 @@ public class RequestProxy {
 	}
 
 	public void getJson(String url, final Listener<JSONObject> callback) {
-
-	 
-
-	 
-
-		
+  
 		JsonObjectRequest req = new JsonObjectRequest(url, null,
-			       new Response.Listener<JSONObject>() {
-			           @Override
-			           public void onResponse(JSONObject response) {
-			               callback.onResponse(response);
-			           }
-			       }, new Response.ErrorListener() {
-			           @Override
-			           public void onErrorResponse(VolleyError error) {
-			              Log.i("Error: "+ error.getMessage());
-			           }
-			       });
-		
+				new Response.Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject response) {
+						callback.onResponse(response);
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						Log.i("Error: " + error.getMessage());
+					}
+				});
+
 		mRequestQueue.add(req);
 	}
 

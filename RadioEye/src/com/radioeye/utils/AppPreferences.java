@@ -14,14 +14,11 @@ public class AppPreferences {
 
 	private static AppPreferences instance;
 
-	
-	public static AppPreferences getInstance( ) {
-		 
+	public static AppPreferences getInstance() {
 
 		return instance;
 	}
-	
-	
+
 	public static AppPreferences getInstance(Context context) {
 		if (instance == null) {
 			instance = new AppPreferences(context);
@@ -36,17 +33,13 @@ public class AppPreferences {
 		this._prefsEditor = _sharedPrefs.edit();
 	}
 
-	public String getSomeString(String key) {
+	public String getString(String key) {
 		return _sharedPrefs.getString(key, "");
 	}
 
-	public void saveSomeString(String key, String text) {
+	public void purString(String key, String text) {
 		_prefsEditor.putString(key, text);
 		_prefsEditor.commit();
-	}
-
-	public static void setInstance(AppPreferences instance) {
-		AppPreferences.instance = instance;
 	}
 
 }

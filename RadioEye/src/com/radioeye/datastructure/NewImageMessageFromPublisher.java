@@ -5,11 +5,11 @@ public class NewImageMessageFromPublisher {
 	private String image;
 	private String image_type;
 
-	public String getImageUrl() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImageUrl(String image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 

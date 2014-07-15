@@ -13,14 +13,12 @@ public class RadioEyeApp extends Application {
 	}
 
 	public final static Mode MODE = Mode.DEVELOPMENT;
-  
+
 	public static final boolean IN_RELEASE_MODE = MODE == Mode.RELEASE;
 	public static final boolean IN_DEVELOPMENT_MODE = MODE == Mode.DEVELOPMENT;
 
-	 
-	
 	private static Context appContext;
-	
+
 	public static String getBaseUrl() {
 
 		if (IN_RELEASE_MODE) {
@@ -33,14 +31,20 @@ public class RadioEyeApp extends Application {
 		}
 
 	}
- 
+
 	@Override
 	public void onCreate() {
-		// RequestManager initialization
-		System.err.println("----------------------------------");
-        RequestManager.getInstance(getApplicationContext());
-        AppPreferences.getInstance(getApplicationContext());
 		super.onCreate();
+		// RequestManager initialization
+
+		init();
+	}
+
+	private void init() {
+
+		RequestManager.getInstance(this);
+		AppPreferences.getInstance(this);
+
 	}
 
 	public static Context getAppContext() {
@@ -50,7 +54,5 @@ public class RadioEyeApp extends Application {
 	public static void setAppContext(Context appContext) {
 		RadioEyeApp.appContext = appContext;
 	}
-
-	 
 
 }

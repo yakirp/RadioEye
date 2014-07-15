@@ -38,7 +38,7 @@ public class LoadingDialog {
 			progDailog.show();
 			// }
 
-		}
+		}  
 
 	}
 
@@ -55,15 +55,15 @@ public class LoadingDialog {
 
 	 
 		
-		String url = AppPreferences.getInstance().getSomeString("profile_image");
-		if (url != "") {
-			try {
-				updateLoadingProfileImage(dialog, url);
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-		}
+//		String url = AppPreferences.getInstance().getString("profile_image");
+//		if (url != "") {
+//			try {
+//				updateLoadingProfileImage(dialog, url);
+//			} catch (IOException e) {
+//
+//				e.printStackTrace();
+//			}
+//		}
 
 		return dialog;
 	}
