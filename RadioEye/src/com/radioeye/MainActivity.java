@@ -67,16 +67,14 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 		setContentView(R.layout.activity_main);
 
-		AppPreferences.getInstance(getApplicationContext());
+		 
 
 		activity = this;
 
 		setContext(this);
 		RadioEyeApp.setAppContext(getApplicationContext());
 
-		AwsMobileClient.getInstance(this);
-		RequestManager.getInstance(getApplicationContext());
-		AppPreferences.getInstance(getApplicationContext());
+		 
 
 		pubnub = new Pubnub("demo", "demo", "", false);
 
@@ -96,7 +94,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		initialSlidingMenu();
 
 	}
-
+  
 	private void initialSlidingMenu() {
 		MenuListFragment s = new MenuListFragment();
 

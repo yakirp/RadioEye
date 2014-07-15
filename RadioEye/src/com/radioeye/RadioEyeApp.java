@@ -3,6 +3,7 @@ package com.radioeye;
 import android.app.Application;
 import android.content.Context;
 
+import com.radioeye.clients.AwsMobileClient;
 import com.radioeye.clients.RequestManager;
 import com.radioeye.utils.AppPreferences;
 
@@ -44,6 +45,10 @@ public class RadioEyeApp extends Application {
 
 		RequestManager.getInstance(this);
 		AppPreferences.getInstance(this);
+		AwsMobileClient.getInstance(this);
+		 
+		 
+		
 
 	}
 

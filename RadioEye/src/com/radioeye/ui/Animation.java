@@ -6,7 +6,7 @@ import android.animation.PropertyValuesHolder;
 import android.view.View;
 
 public class Animation {
-
+  
 	public static ObjectAnimator tada(View view) {
 	    return tada(view, 1f);
 	}
