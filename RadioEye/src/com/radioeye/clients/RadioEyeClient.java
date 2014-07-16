@@ -7,7 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
+
+import com.android.volley.error.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.common.TaskCallback;
@@ -21,6 +22,7 @@ import com.radioeye.ui.SlidingUpPanelLayout;
 import com.radioeye.ui.SlidingUpPanelLayout.Panelcallback;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
+import com.radioeye.volley.RequestManager;
 
 public class RadioEyeClient {
 
@@ -339,19 +341,16 @@ public class RadioEyeClient {
 
 				} // if (isShowAd)
 				else {
-				 
+					ImageView avatar = (ImageView) activity.findViewById(webId);
 
 					RequestManager.getInstance().doRequest()
 							.loadImage(url, new ImageListener() {
 
 								@Override
-								public void onErrorResponse(VolleyError error) {
-									Log.e("Image Load Error: "
-											+ error.getMessage());
-									Log.e(url);
-//									Log.e(String
-//											.valueOf(error.networkResponse.statusCode));
-									error.printStackTrace();
+								public void onErrorResponse(
+										com.android.volley.error.VolleyError error) {
+									// TODO Auto-generated method stub
+
 								}
 
 								@Override
@@ -368,6 +367,7 @@ public class RadioEyeClient {
 
 								}
 							});
+
 				}
 
 			}
@@ -400,7 +400,5 @@ public class RadioEyeClient {
 	public void setMainHandler(Handler mainHandler) {
 		this.mainHandler = mainHandler;
 	}
-
-	 
 
 }

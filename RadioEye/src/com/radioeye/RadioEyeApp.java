@@ -4,8 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.radioeye.clients.AwsMobileClient;
-import com.radioeye.clients.RequestManager;
 import com.radioeye.utils.AppPreferences;
+import com.radioeye.volley.MyVolley;
+import com.radioeye.volley.RequestManager;
 
 public class RadioEyeApp extends Application {
 
@@ -42,11 +43,12 @@ public class RadioEyeApp extends Application {
 	}
 
 	private void init() {
-
+		
+		MyVolley.init(this);
 		RequestManager.getInstance(this);
 		AppPreferences.getInstance(this);
 		AwsMobileClient.getInstance(this);
-		 
+	 
 		 
 		
 

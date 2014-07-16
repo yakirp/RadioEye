@@ -3,25 +3,8 @@ package com.radioeye.ui;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.NetworkImageView;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.radioeye.MenuCallback;
-import com.radioeye.R;
-import com.radioeye.clients.RequestManager;
-import com.radioeye.clients.RequestProxy;
-import com.radioeye.utils.AppPreferences;
-import com.radioeye.utils.Log;
-
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,8 +14,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.volley.Response.Listener;
+import com.android.volley.ui.NetworkImageView;
+import com.android.volley.ui.NetworkImageViewPlus;
+ 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.radioeye.MenuCallback;
+import com.radioeye.R;
+ 
+import com.radioeye.utils.Log;
+import com.radioeye.volley.MyVolley;
+import com.radioeye.volley.RequestManager;
 
 public class MenuListFragment extends ListFragment {
 
@@ -212,11 +206,10 @@ private SwipeRefreshLayout swipeLayout;
 			 
 			String url = getItem(position).getOnline().equalsIgnoreCase("t") ? getItem(position).getImageUrl() : getItem(position).getOfflineimageUrl();
 			
-			 NetworkImageView imageUrl = (NetworkImageView) convertView.findViewById(R.id.image_item);
-			 imageUrl.setImageUrl(url,RequestManager.getInstance().doRequest().getmImageLoader());
+			NetworkImageView imageUrl = (NetworkImageView) convertView.findViewById(R.id.image_item);
+			 imageUrl.setImageUrl(url,MyVolley.getImageLoader());
 			 
 		 
-			 
 			 
 			TextView title = (TextView) convertView.findViewById(R.id.lbl_contact_name_item);
 		 

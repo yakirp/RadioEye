@@ -33,12 +33,12 @@ import com.pubnub.api.PubnubException;
 import com.radioeye.clients.AwsMobileClient;
 import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.RadioEyeClient;
-import com.radioeye.clients.RequestManager;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
 import com.radioeye.ui.MenuListFragment;
 import com.radioeye.ui.SlidingUpPanelLayout;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
+import com.radioeye.volley.RequestManager;
 
 /**
  * Main RadioEye activity
