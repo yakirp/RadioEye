@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.android.volley.RequestQueue;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.GraphUserCallback;
@@ -67,14 +68,10 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 		setContentView(R.layout.activity_main);
 
-		 
-
 		activity = this;
 
 		setContext(this);
 		RadioEyeApp.setAppContext(getApplicationContext());
-
-		 
 
 		pubnub = new Pubnub("demo", "demo", "", false);
 
@@ -94,7 +91,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		initialSlidingMenu();
 
 	}
-            
+
 	private void initialSlidingMenu() {
 		MenuListFragment s = new MenuListFragment();
 
@@ -165,8 +162,6 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 				resultCode, data);
 	}
 
-	 
-
 	@Override
 	protected void onPause() {
 
@@ -176,6 +171,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 		AwsMobileClient.getInstance().updateAwsAboutPauseSession();
 
+		RequestManager.getInstance().cancelAllTraffic();
 	}
 
 	@Override
@@ -202,11 +198,11 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		// } else {
 		// startRadioEye();
 		// }
-		
+
 		if (Session.getActiveSession() != null) {
 			System.err.println("============session==========");
 		}
-		
+
 		startRadioEye();
 
 	}
@@ -220,7 +216,8 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 				if (user != null) {
 
-				AwsMobileClient.getInstance().updateAwsWithFacebookSession();
+					AwsMobileClient.getInstance()
+							.updateAwsWithFacebookSession();
 
 					Bundle params = new Bundle();
 					// make request to the /me API
@@ -273,8 +270,6 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 				}
 
 			}
-
-			 
 
 		});
 
