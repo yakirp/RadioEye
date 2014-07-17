@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		initialSlidingMenu();
 
 	}
-  
+            
 	private void initialSlidingMenu() {
 		MenuListFragment s = new MenuListFragment();
 

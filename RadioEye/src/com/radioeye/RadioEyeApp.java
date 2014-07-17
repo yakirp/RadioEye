@@ -33,12 +33,12 @@ public class RadioEyeApp extends Application {
 		}
 
 	}
-
+  
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		// RequestManager initialization
-
+  
 		init();
 	}
 
@@ -48,7 +48,7 @@ public class RadioEyeApp extends Application {
 		RequestManager.getInstance(this);
 		AppPreferences.getInstance(this);
 		AwsMobileClient.getInstance(this);
-	 
+	   
 		 
 		
 
