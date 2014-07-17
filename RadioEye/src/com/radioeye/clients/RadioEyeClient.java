@@ -286,11 +286,13 @@ public class RadioEyeClient {
 												boolean isImmediate) {
 											ImageView avatar = (ImageView) activity
 													.findViewById(webId);
-
+ 
 											avatar.setImageBitmap(response
 													.getBitmap());
 
-											while (avatar.getDrawable() == null) {
+									 
+											
+											while (avatar.getDrawable()  == null) {
 
 											}
 

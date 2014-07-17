@@ -166,11 +166,13 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 	protected void onPause() {
 
 		super.onPause();
-
+  
 		pubnub.unsubscribe(getCurrentUserFacebookId());
 
 		AwsMobileClient.getInstance().updateAwsAboutPauseSession();
 
+		getRadioEyeClient().getLoadingDialog().close();
+		
 		RequestManager.getInstance().cancelAllTraffic();
 	}
 
