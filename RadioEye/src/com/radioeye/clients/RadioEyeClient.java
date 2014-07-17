@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
 import com.android.volley.Response.Listener;
-
-import com.android.volley.error.VolleyError;
+import com.android.volley.VolleyError;
+ 
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.common.TaskCallback;
@@ -348,7 +348,7 @@ public class RadioEyeClient {
 
 								@Override
 								public void onErrorResponse(
-										com.android.volley.error.VolleyError error) {
+										 VolleyError error) {
 									// TODO Auto-generated method stub
 
 								}

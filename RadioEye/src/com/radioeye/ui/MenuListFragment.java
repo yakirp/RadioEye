@@ -17,8 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Response.Listener;
-import com.android.volley.ui.NetworkImageView;
-import com.android.volley.ui.NetworkImageViewPlus;
+import com.android.volley.toolbox.NetworkImageView;
+ 
+ 
  
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.radioeye.MenuCallback;
