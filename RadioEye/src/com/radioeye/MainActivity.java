@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.facebook.HttpMethod;
@@ -28,9 +29,13 @@ import com.facebook.model.GraphUser;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.nineoldandroids.view.animation.AnimatorProxy;
+
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
+import com.pubnub.api.Pubnub.*;
+
 import com.radioeye.clients.AwsMobileClient;
 import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.RadioEyeClient;
@@ -73,7 +78,8 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		setContext(this);
 		RadioEyeApp.setAppContext(getApplicationContext());
 
-		pubnub = new Pubnub("demo", "demo", "", false);
+		pubnub = new Pubnub("pub-69159aa7-3bcf-4d09-ae25-3269f14acb6a",
+				"sub-4d81bf51-1eb6-11e1-82b2-3d61f7276a67", "", false);
 
 		setRadioEyeClient(new RadioEyeClient(activity));
 
@@ -166,13 +172,13 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 	protected void onPause() {
 
 		super.onPause();
-  
+
 		pubnub.unsubscribe(getCurrentUserFacebookId());
 
 		AwsMobileClient.getInstance().updateAwsAboutPauseSession();
 
 		getRadioEyeClient().getLoadingDialog().close();
-		
+
 		RequestManager.getInstance().cancelAllTraffic();
 	}
 
@@ -289,8 +295,8 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 			getRadioEyeClient().showLoadingDialog();
 
-			getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
-					localChannel, getSlidingPanel());
+			// getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
+			// localChannel, getSlidingPanel());
 
 			// init pubnub clinet
 			initPubnub(localChannel);
@@ -301,6 +307,76 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 		try {
 			pubnub.subscribe(channel, new Callback() {
+
+				@Override
+				public void connectCallback(String channel, Object arg1) {
+
+					Log.i("cc= "
+							+ AppPreferences.getInstance().getString(
+									"lastChannel"));
+
+					pubnub.getState(
+							AppPreferences.getInstance().getString(
+									"lastChannel"), "my_uuid", new Callback() {
+
+								@Override
+								public void errorCallback(final String channel,
+										PubnubError arg1) {
+									Log.i("===========");
+									Log.i(arg1.toString());
+
+									getRadioEyeClient().postToUiThread(
+											new Runnable() {
+
+												@Override
+												public void run() {
+													Toast.makeText(
+															context,
+															"Network "
+																	+ channel,
+															Toast.LENGTH_LONG)
+															.show();
+													getRadioEyeClient()
+															.getAndLoadCurrentPublisherActiveImages(
+																	AppPreferences
+																			.getInstance()
+																			.getString(
+																					"lastChannel"),
+																	getSlidingPanel());
+
+												}
+											});
+
+								}
+  
+								@Override
+								public void successCallback(String channel,
+										final Object response) {
+									Log.i("==========================");
+									Log.i(channel + " " + response.toString());
+
+									getRadioEyeClient().postToUiThread(
+											new Runnable() {
+
+												@Override
+												public void run() {
+
+													Toast.makeText(context,
+															"Pubnub",
+															Toast.LENGTH_LONG)
+															.show();
+													getRadioEyeClient()  
+															.handleCurrnetublisherImages(
+																	response.toString(),
+																	getSlidingPanel());
+  
+								  				}
+											});
+  
+								}
+							});  
+
+				}
 
 				@Override
 				public void successCallback(String channel, Object msg) {

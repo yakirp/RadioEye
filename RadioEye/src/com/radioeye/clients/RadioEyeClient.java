@@ -137,7 +137,7 @@ public class RadioEyeClient {
 	 * @param json
 	 *            contain the publisher images key
 	 */
-	private void handleCurrnetublisherImages(String json,
+	public void handleCurrnetublisherImages(String json,
 			final SlidingUpPanelLayout panel) {
 
 		final CurrentPublisherImagesFromServer allImages = new Gson().fromJson(
@@ -377,7 +377,7 @@ public class RadioEyeClient {
 
 	}
 
-	private void postToUiThread(Runnable runnable) {
+	public void postToUiThread(Runnable runnable) {
 
 		// Method 1 :
 		// getMainHandler().post(runnable);
