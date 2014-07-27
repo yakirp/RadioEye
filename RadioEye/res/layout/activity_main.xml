@@ -19,35 +19,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#E3E3E3"
+              android:paddingBottom="@dimen/feed_item_padding_top_bottom"
             android:orientation="vertical" >
-
-            <!--
-            <WebView
-                android:id="@+id/webview_top"
-                android:layout_width="fill_parent"
-                android:layout_height="85dip" />
-            -->
 
             <ImageView
                 android:id="@+id/webview_top"
                 android:layout_width="fill_parent"
                 android:layout_height="85dip"
-                    android:scaleType="fitXY"
-                 />
+                android:layout_marginLeft="@dimen/feed_item_margin"
+                android:layout_marginRight="@dimen/feed_item_margin"
+                android:layout_marginTop="@dimen/feed_item_margin"
+                android:background="@drawable/bg_parent_rounded_corner"
+                android:paddingBottom="@dimen/feed_item_padding_top_bottom"
+                android:paddingTop="@dimen/feed_item_padding_top_bottom"
+                android:scaleType="fitXY" />
 
             <ImageView
                 android:id="@+id/webview_center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-              android:scaleType="fitXY"
-                />
-
-            <!--
-            <WebView
-                android:id="@+id/webview_center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-            -->
+                android:layout_marginLeft="@dimen/feed_item_margin"
+                android:layout_marginRight="@dimen/feed_item_margin"
+                android:layout_marginTop="@dimen/feed_item_margin"
+                android:background="@drawable/bg_parent_rounded_corner"
+                android:paddingBottom="@dimen/feed_item_padding_top_bottom"
+                android:paddingTop="@dimen/feed_item_padding_top_bottom"
+                android:scaleType="fitXY" />
         </LinearLayout>
 
         <!-- SLIDING LAYOUT -->
@@ -62,14 +59,7 @@
                 android:id="@+id/webview_ad"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                 android:scaleType="fitXY"
-                />
-            <!--
-            <WebView
-                android:id="@+id/webview_ad"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent" />
-            -->
+                android:scaleType="fitXY" />
         </LinearLayout>
     </com.radioeye.ui.SlidingUpPanelLayout>
 

@@ -295,8 +295,8 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 			getRadioEyeClient().showLoadingDialog();
 
-			// getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
-			// localChannel, getSlidingPanel());
+		//	getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
+		//			localChannel, getSlidingPanel());
 
 			// init pubnub clinet
 			initPubnub(localChannel);
@@ -348,33 +348,53 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 											});
 
 								}
-  
+
 								@Override
 								public void successCallback(String channel,
 										final Object response) {
 									Log.i("==========================");
 									Log.i(channel + " " + response.toString());
+									if (response.toString().trim().equalsIgnoreCase("{}")) {
+										
+										getRadioEyeClient().postToUiThread(
+												new Runnable() {
 
-									getRadioEyeClient().postToUiThread(
-											new Runnable() {
+													@Override
+													public void run() {
 
-												@Override
-												public void run() {
+														getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
+																AppPreferences.getInstance().getString(
+																		"lastChannel"), getSlidingPanel());
 
-													Toast.makeText(context,
-															"Pubnub",
-															Toast.LENGTH_LONG)
-															.show();
-													getRadioEyeClient()  
-															.handleCurrnetublisherImages(
-																	response.toString(),
-																	getSlidingPanel());
-  
-								  				}
-											});
-  
+													}
+												});
+
+ 									 
+									} else {
+									 
+										getRadioEyeClient().postToUiThread(
+												new Runnable() {
+
+													@Override
+													public void run() {
+
+														Toast.makeText(context,
+																"Pubnub",
+																Toast.LENGTH_LONG)
+																.show();
+														getRadioEyeClient()
+																.handleCurrnetublisherImages(
+																		response.toString(),
+																		getSlidingPanel());
+
+													}
+												});
+									}
+									
+ 
+
 								}
-							});  
+							});
 
 				}
 
@@ -394,13 +414,12 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 					getRadioEyeClient().handleNewIncomingImage(incomingImage,
 							getSlidingPanel());
 
-				}
+				}     
 			});
 		} catch (PubnubException e1) {
 
 			e1.printStackTrace();
-		}
-
+		}  
 	}
 
 	@Override
