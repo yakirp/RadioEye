@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -46,12 +47,12 @@ import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
 import com.radioeye.volley.RequestManager;
 
-/**
+/**  
  * Main RadioEye activity
  * 
- * @author yakirp
- * 
- */
+ * @author yakirp    
+ *         
+ */        
 public class MainActivity extends FragmentActivity implements MenuCallback {
 
 	private SlidingUpPanelLayout slidingPanel;
@@ -62,8 +63,9 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 	private MainActivity activity;
 	private SlidingMenu menu;
 	private Pubnub pubnub;
+	private ActionBarDrawerToggle mDrawerToggle;
 
-	@Override
+	@Override    
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -91,7 +93,10 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 			setActionBarTranslation(-actionBarHeight);// will "hide" an
 														// ActionBar
 		}
+		
+		 
 
+		    
 		initialSlidingPanel();
 
 		initialSlidingMenu();
@@ -117,7 +122,10 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		s.setSlidingMenu(menu);
 		s.setCallback(this);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+	//	getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		 getActionBar().setIcon(R.drawable.ic_navigation_drawer);
+
 	}
 
 	private void initialSlidingPanel() {
