@@ -6,12 +6,14 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,7 +55,7 @@ import com.radioeye.volley.RequestManager;
  * @author yakirp    
  *         
  */        
-public class MainActivity extends FragmentActivity implements MenuCallback {
+public class MainActivity extends Activity implements MenuCallback {
 
 	private SlidingUpPanelLayout slidingPanel;
 	private String CurrentUserFacebookId = null;
@@ -64,6 +66,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 	private SlidingMenu menu;
 	private Pubnub pubnub;
 	private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerLayout mDrawerLayout;
 
 	@Override    
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +76,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		// getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main);
 
 		activity = this;
 
@@ -85,22 +88,52 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 
 		setRadioEyeClient(new RadioEyeClient(activity));
 
-		boolean actionBarHidden = savedInstanceState != null
-				&& savedInstanceState.getBoolean(SAVED_STATE_ACTION_BAR_HIDDEN,
-						false);
-		if (actionBarHidden) {
-			int actionBarHeight = getActionBarHeight();
-			setActionBarTranslation(-actionBarHeight);// will "hide" an
-														// ActionBar
-		}
+//		boolean actionBarHidden = savedInstanceState != null
+//				&& savedInstanceState.getBoolean(SAVED_STATE_ACTION_BAR_HIDDEN,
+//						false);
+		
+//		if (actionBarHidden) {
+//			int actionBarHeight = getActionBarHeight();
+//			setActionBarTranslation(-actionBarHeight);// will "hide" an
+//														// ActionBar
+//		}
 		
 		 
 
 		    
-		initialSlidingPanel();
+	//	initialSlidingPanel();
 
-		initialSlidingMenu();
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		 // enabling action bar app icon and behaving it as toggle button
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+ 
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_navigation_drawer, //nav menu toggle icon
+                R.string.app_name, // nav drawer open - description for accessibility
+                R.string.app_name // nav drawer close - description for accessibility
+        ){
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle("dd");
+                // calling onPrepareOptionsMenu() to show action bar icons
+                invalidateOptionsMenu();
+            }
+ 
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle("ff");
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+            }
+        };
+	//	initialSlidingMenu();
 
+	}
+	
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+	    super.onPostCreate(savedInstanceState);
+	    // Sync the toggle state after onRestoreInstanceState has occurred.
+	    mDrawerToggle.syncState();
 	}
 
 	private void initialSlidingMenu() {
@@ -116,8 +149,8 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		menu.setMenu(R.layout.menu_frame);
 
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.menu_frame, s).commit();
+//		getSupportFragmentManager().beginTransaction()
+//				.replace(R.id.menu_frame, s).commit();
 
 		s.setSlidingMenu(menu);
 		s.setCallback(this);
@@ -219,7 +252,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 			System.err.println("============session==========");
 		}
 
-		startRadioEye();
+	//	startRadioEye();
 
 	}
 
@@ -263,7 +296,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 													.purString(
 															"profile_image",
 															obj.getString("url"));
-
+  
 											// radioClient.updateLoadingProfileImage(obj.getString("url"));
 										} catch (JSONException e) {
 
@@ -449,7 +482,7 @@ public class MainActivity extends FragmentActivity implements MenuCallback {
 		int itemId = item.getItemId();
 		switch (itemId) {
 		case android.R.id.home:
-			menu.toggle();
+			//menu.toggle();
 			break;
 
 		}
