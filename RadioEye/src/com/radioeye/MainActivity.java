@@ -1,28 +1,37 @@
 package com.radioeye;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.RequestQueue;
+import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.NetworkImageView;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.GraphUserCallback;
@@ -32,13 +41,10 @@ import com.facebook.model.GraphUser;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.nineoldandroids.view.animation.AnimatorProxy;
-
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
-import com.pubnub.api.Pubnub.*;
-
 import com.radioeye.clients.AwsMobileClient;
 import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.RadioEyeClient;
@@ -47,14 +53,15 @@ import com.radioeye.ui.MenuListFragment;
 import com.radioeye.ui.SlidingUpPanelLayout;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
+import com.radioeye.volley.MyVolley;
 import com.radioeye.volley.RequestManager;
 
-/**  
+/**
  * Main RadioEye activity
  * 
- * @author yakirp    
- *         
- */        
+ * @author yakirp
+ * 
+ */
 public class MainActivity extends Activity implements MenuCallback {
 
 	private SlidingUpPanelLayout slidingPanel;
@@ -67,8 +74,10 @@ public class MainActivity extends Activity implements MenuCallback {
 	private Pubnub pubnub;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private DrawerLayout mDrawerLayout;
-
-	@Override    
+	private SwipeRefreshLayout swipeLayout;
+	private ListView mDrawerList;
+  
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -88,53 +97,78 @@ public class MainActivity extends Activity implements MenuCallback {
 
 		setRadioEyeClient(new RadioEyeClient(activity));
 
-//		boolean actionBarHidden = savedInstanceState != null
-//				&& savedInstanceState.getBoolean(SAVED_STATE_ACTION_BAR_HIDDEN,
-//						false);
-		
-//		if (actionBarHidden) {
-//			int actionBarHeight = getActionBarHeight();
-//			setActionBarTranslation(-actionBarHeight);// will "hide" an
-//														// ActionBar
-//		}
-		
-		 
-
-		    
-	//	initialSlidingPanel();
-
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		 // enabling action bar app icon and behaving it as toggle button
+		mDrawerList = (ListView) findViewById(R.id.list);
+		  
+		// set a custom shadow that overlays the main content when the drawer
+		// opens
+		mDrawerLayout.setDrawerShadow(R.drawable.above_shadow,
+				GravityCompat.START);
+		 
+		// enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
- 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_navigation_drawer, //nav menu toggle icon
-                R.string.app_name, // nav drawer open - description for accessibility
-                R.string.app_name // nav drawer close - description for accessibility
-        ){
-            public void onDrawerClosed(View view) {
-                getActionBar().setTitle("dd");
-                // calling onPrepareOptionsMenu() to show action bar icons
-                invalidateOptionsMenu();
-            }
- 
-            public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle("ff");
-                // calling onPrepareOptionsMenu() to hide action bar icons
-                invalidateOptionsMenu();
-            }
-        };
-	//	initialSlidingMenu();
+        
+        
+		// ActionBarDrawerToggle ties together the the proper interactions
+		// between the sliding drawer and the action bar app icon
+		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_navigation_drawer, /*
+										 * nav drawer image to replace 'Up'
+										 * caret
+										 */
+		R.string.action_contact, /* "open drawer" description for accessibility */
+		R.string.action_contact /* "close drawer" description for accessibility */
+		) {
+			public void onDrawerClosed(View view) {
+				getActionBar().setTitle("s");
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
+			}
 
+			public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle("d");
+				invalidateOptionsMenu(); // creates call to
+		  									// onPrepareOptionsMenu()
+			}
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		 
+
+		 
+		
+		initialSlidingPanel();
+		
+		list();  
 	}
-	
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-	    super.onPostCreate(savedInstanceState);
-	    // Sync the toggle state after onRestoreInstanceState has occurred.
-	    mDrawerToggle.syncState();
-	}
+
+	 /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+ 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
 	private void initialSlidingMenu() {
 		MenuListFragment s = new MenuListFragment();
@@ -149,15 +183,16 @@ public class MainActivity extends Activity implements MenuCallback {
 		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		menu.setMenu(R.layout.menu_frame);
 
-//		getSupportFragmentManager().beginTransaction()
-//				.replace(R.id.menu_frame, s).commit();
+		// getSupportFragmentManager().beginTransaction()
+		// .replace(R.id.menu_frame, s).commit();
 
 		s.setSlidingMenu(menu);
 		s.setCallback(this);
 
-	//	getActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		 getActionBar().setIcon(R.drawable.ic_navigation_drawer);
+		// getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		getActionBar().setIcon(R.drawable.ic_navigation_drawer);
+	 
 
 	}
 
@@ -167,7 +202,78 @@ public class MainActivity extends Activity implements MenuCallback {
 		getSlidingPanel().setPanelHeight(0);
 
 	}
+	
+	public void list( ) {
+	 
+		
+		
+		RequestManager.getInstance().doRequest().getJson("http://airfunction.com/server/php/testrds.php", new Listener<JSONObject>() {
 
+			@Override
+			public void onResponse(JSONObject response) {
+				   Log.i(response.toString());
+	                parseJSON(response);
+	             
+				
+			}
+		});
+		
+		 swipeLayout = (SwipeRefreshLayout)  findViewById(R.id.swipe_container);
+		    swipeLayout.setOnRefreshListener(new OnRefreshListener() {
+				
+				@Override
+				public void onRefresh() {
+					RequestManager.getInstance().doRequest().getJson("http://airfunction.com/server/php/testrds.php", new Listener<JSONObject>() {
+
+						@Override
+						public void onResponse(JSONObject response) {
+							   Log.i(response.toString());
+				                parseJSON(response);
+				             
+				                swipeLayout.setRefreshing(false);
+						}
+					});
+					
+				}
+			});
+		    swipeLayout.setColorScheme(android.R.color.holo_blue_bright, 
+		            android.R.color.holo_green_light, 
+		            android.R.color.holo_orange_light, 
+		            android.R.color.holo_red_light);
+ 
+		
+		
+		
+		 
+	}
+
+	 private void parseJSON(JSONObject json){
+	        try{
+	        	SampleAdapter adapter = new SampleAdapter(this);
+	        	
+	          //  JSONObject value = json.getJSONArray("publishers");
+	            JSONArray items = json.getJSONArray("publishers");
+	            for(int i=0;i<items.length();i++){
+
+	                    JSONObject item = items.getJSONObject(i);
+	                    Log.i(item.optString("username"));
+	                  
+	                    adapter.add(new publisherItems(item.optString("title"), item.optString("imageurl"),item.optString("userfacebookid") ,item.optString("description"),item.optString("online"),item.optString("offlineimageurl")));
+	                   
+	            }
+	              
+	               
+	    		 
+	            mDrawerList.setAdapter(adapter);
+	    		
+	        }
+	        catch(Exception e){
+	            e.printStackTrace();
+	        }
+
+
+	    }
+	 
 	private int getActionBarHeight() {
 		int actionBarHeight = 0;
 		TypedValue tv = new TypedValue();
@@ -252,7 +358,7 @@ public class MainActivity extends Activity implements MenuCallback {
 			System.err.println("============session==========");
 		}
 
-	//	startRadioEye();
+		 startRadioEye();
 
 	}
 
@@ -296,7 +402,7 @@ public class MainActivity extends Activity implements MenuCallback {
 													.purString(
 															"profile_image",
 															obj.getString("url"));
-  
+
 											// radioClient.updateLoadingProfileImage(obj.getString("url"));
 										} catch (JSONException e) {
 
@@ -336,8 +442,8 @@ public class MainActivity extends Activity implements MenuCallback {
 
 			getRadioEyeClient().showLoadingDialog();
 
-		//	getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
-		//			localChannel, getSlidingPanel());
+			// getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
+			// localChannel, getSlidingPanel());
 
 			// init pubnub clinet
 			initPubnub(localChannel);
@@ -395,31 +501,36 @@ public class MainActivity extends Activity implements MenuCallback {
 										final Object response) {
 									Log.i("==========================");
 									Log.i(channel + " " + response.toString());
-									if (response.toString().trim().equalsIgnoreCase("{}")) {
-										
+									if (response.toString().trim()
+											.equalsIgnoreCase("{}")) {
+
 										getRadioEyeClient().postToUiThread(
 												new Runnable() {
 
 													@Override
 													public void run() {
 
-														getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
-																AppPreferences.getInstance().getString(
-																		"lastChannel"), getSlidingPanel());
+														getRadioEyeClient()
+																.getAndLoadCurrentPublisherActiveImages(
+																		AppPreferences
+																				.getInstance()
+																				.getString(
+																						"lastChannel"),
+																		getSlidingPanel());
 
 													}
 												});
 
- 									 
 									} else {
-									 
+
 										getRadioEyeClient().postToUiThread(
 												new Runnable() {
 
 													@Override
 													public void run() {
 
-														Toast.makeText(context,
+														Toast.makeText(
+																context,
 																"Pubnub",
 																Toast.LENGTH_LONG)
 																.show();
@@ -431,8 +542,6 @@ public class MainActivity extends Activity implements MenuCallback {
 													}
 												});
 									}
-									
- 
 
 								}
 							});
@@ -455,12 +564,12 @@ public class MainActivity extends Activity implements MenuCallback {
 					getRadioEyeClient().handleNewIncomingImage(incomingImage,
 							getSlidingPanel());
 
-				}     
+				}
 			});
 		} catch (PubnubException e1) {
 
 			e1.printStackTrace();
-		}  
+		}
 	}
 
 	@Override
@@ -482,7 +591,7 @@ public class MainActivity extends Activity implements MenuCallback {
 		int itemId = item.getItemId();
 		switch (itemId) {
 		case android.R.id.home:
-			//menu.toggle();
+			// menu.toggle();
 			break;
 
 		}
@@ -492,8 +601,15 @@ public class MainActivity extends Activity implements MenuCallback {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		// Handle your other action bar items...
 
-		return true;
+		return super.onOptionsItemSelected(item);
+
 	}
 
 	@Override
@@ -560,13 +676,132 @@ public class MainActivity extends Activity implements MenuCallback {
 	@Override
 	public void onItemSelect(String Channel) {
 
-		menu.toggle();
+		 
 		pubnub.unsubscribe(AppPreferences.getInstance()
 				.getString("lastChannel"));
 
 		AppPreferences.getInstance().purString("lastChannel", Channel);
 
 		startRadioEye();
+		
+		 mDrawerLayout.closeDrawers();
+
+	}
+	public class publisherItems {
+		private String publisherName;
+		private String channel;
+		private String imageUrl;
+		private String offlineimageUrl;
+		private String description;
+		private String online;
+	 
+		public publisherItems(String tag, String imageUrl,String Channel , String description , String online,String offlineimageurl) {
+			this.setPublisherName(tag); 
+			this.setImageUrl(imageUrl);
+			this.channel = Channel;
+			this.setDescription(description);
+			this.setOnline(online);
+			this.setOfflineimageUrl(offlineimageurl);
+			
+		}
+		public String getChannel() {
+			return channel;
+		}
+		public void setChannel(String channel) {
+			channel = channel;
+		}
+		public String getPublisherName() {
+			return publisherName;
+		}
+		public void setPublisherName(String publisherName) {
+			this.publisherName = publisherName;
+		}
+		public String getImageUrl() {
+			return imageUrl;
+		}
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		 
+		public String getOfflineimageUrl() {
+			return offlineimageUrl;
+		}
+		public void setOfflineimageUrl(String offlineimageUrl) {
+			this.offlineimageUrl = offlineimageUrl;
+		}
+		public String getOnline() {
+			return online;
+		}
+		public void setOnline(String online) {
+			this.online = online;
+		}
+	}
+
+	public class SampleAdapter extends ArrayAdapter<publisherItems> {
+
+	 
+		
+	 
+		
+		
+		public SampleAdapter(Context context) {
+			super(context, 0);
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);
+			}
+			
+			 
+			String url = getItem(position).getOnline().equalsIgnoreCase("t") ? getItem(position).getImageUrl() : getItem(position).getOfflineimageUrl();
+			
+			NetworkImageView imageUrl = (NetworkImageView) convertView.findViewById(R.id.image_item);
+			 imageUrl.setImageUrl(url,MyVolley.getImageLoader());
+			 
+		 
+			 
+			TextView title = (TextView) convertView.findViewById(R.id.lbl_contact_name_item);
+		 
+			
+			
+			
+			
+			TextView description = (TextView) convertView.findViewById(R.id.lbl_contact_description_item);
+			title.setText(getItem(position).getPublisherName());
+			description.setText(getItem(position).getDescription());
+			
+			 if (getItem(position).getOnline().equalsIgnoreCase("f")) {
+					title.setTextColor(Color.GRAY);
+					description.setTextColor(Color.GRAY);
+			 } 
+			 
+			 
+			 
+			
+			
+			final String channel =getItem(position).getChannel();
+			
+			convertView.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+					 
+					onItemSelect(channel);
+					 
+				}
+				
+			});
+
+			return convertView;
+		}
 
 	}
 

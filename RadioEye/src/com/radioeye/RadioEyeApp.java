@@ -26,12 +26,12 @@ public class RadioEyeApp extends Application {
 		if (IN_RELEASE_MODE) {
 			/* AWS HAProxy */
 			return "http://54.83.192.113";
-
+  
 		} else {
 			/* DigitalOcean Development Server */
 			return "http://airfunction.com";
 		}
-
+  
 	}
   
 	@Override
