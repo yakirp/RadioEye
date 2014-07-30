@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.NetworkImageView;
 import com.facebook.HttpMethod;
@@ -76,7 +78,7 @@ public class MainActivity extends Activity implements MenuCallback {
 	private DrawerLayout mDrawerLayout;
 	private SwipeRefreshLayout swipeLayout;
 	private ListView mDrawerList;
-  
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,17 +101,12 @@ public class MainActivity extends Activity implements MenuCallback {
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list);
-		  
+
 		// set a custom shadow that overlays the main content when the drawer
 		// opens
 		mDrawerLayout.setDrawerShadow(R.drawable.above_shadow,
 				GravityCompat.START);
-		 
-		// enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        
-        
+
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
 		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
@@ -130,45 +127,50 @@ public class MainActivity extends Activity implements MenuCallback {
 			public void onDrawerOpened(View drawerView) {
 				getActionBar().setTitle("d");
 				invalidateOptionsMenu(); // creates call to
-		  									// onPrepareOptionsMenu()
+											// onPrepareOptionsMenu()
 			}
 		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		 
 
-		 
-		
+		mDrawerToggle.syncState();
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		// enable ActionBar app icon to behave as action to toggle nav drawer
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+
 		initialSlidingPanel();
-		
-		list();  
+
+		list();
 	}
 
-	 /* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
-        
-        return super.onPrepareOptionsMenu(menu);
-    }
+	/* Called whenever we call invalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the nav drawer is open, hide action items related to the content
+		// view
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
- 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
+		return super.onPrepareOptionsMenu(menu);
+	}
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
+	/**
+	 * When using the ActionBarDrawerToggle, you must call it during
+	 * onPostCreate() and onConfigurationChanged()...
+	 */
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Pass any configuration change to the drawer toggls
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
 
 	private void initialSlidingMenu() {
 		MenuListFragment s = new MenuListFragment();
@@ -192,7 +194,6 @@ public class MainActivity extends Activity implements MenuCallback {
 		// getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		getActionBar().setIcon(R.drawable.ic_navigation_drawer);
-	 
 
 	}
 
@@ -202,78 +203,80 @@ public class MainActivity extends Activity implements MenuCallback {
 		getSlidingPanel().setPanelHeight(0);
 
 	}
-	
-	public void list( ) {
-	 
-		
-		
-		RequestManager.getInstance().doRequest().getJson("http://airfunction.com/server/php/testrds.php", new Listener<JSONObject>() {
+
+	public void list() {
+
+		RequestManager
+				.getInstance()
+				.doRequest()
+				.getJson("http://airfunction.com/server/php/testrds.php",
+						new Listener<JSONObject>() {
+
+							@Override
+							public void onResponse(JSONObject response) {
+								Log.i(response.toString());
+								parseJSON(response);
+
+							}
+						});
+
+		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
-			public void onResponse(JSONObject response) {
-				   Log.i(response.toString());
-	                parseJSON(response);
-	             
-				
+			public void onRefresh() {
+				RequestManager
+						.getInstance()
+						.doRequest()
+						.getJson(
+								"http://airfunction.com/server/php/testrds.php",
+								new Listener<JSONObject>() {
+
+									@Override
+									public void onResponse(JSONObject response) {
+										Log.i(response.toString());
+										parseJSON(response);
+
+										swipeLayout.setRefreshing(false);
+									}
+								});
+
 			}
 		});
-		
-		 swipeLayout = (SwipeRefreshLayout)  findViewById(R.id.swipe_container);
-		    swipeLayout.setOnRefreshListener(new OnRefreshListener() {
-				
-				@Override
-				public void onRefresh() {
-					RequestManager.getInstance().doRequest().getJson("http://airfunction.com/server/php/testrds.php", new Listener<JSONObject>() {
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
 
-						@Override
-						public void onResponse(JSONObject response) {
-							   Log.i(response.toString());
-				                parseJSON(response);
-				             
-				                swipeLayout.setRefreshing(false);
-						}
-					});
-					
-				}
-			});
-		    swipeLayout.setColorScheme(android.R.color.holo_blue_bright, 
-		            android.R.color.holo_green_light, 
-		            android.R.color.holo_orange_light, 
-		            android.R.color.holo_red_light);
- 
-		
-		
-		
-		 
 	}
 
-	 private void parseJSON(JSONObject json){
-	        try{
-	        	SampleAdapter adapter = new SampleAdapter(this);
-	        	
-	          //  JSONObject value = json.getJSONArray("publishers");
-	            JSONArray items = json.getJSONArray("publishers");
-	            for(int i=0;i<items.length();i++){
+	private void parseJSON(JSONObject json) {
+		try {
+			SampleAdapter adapter = new SampleAdapter(this);
 
-	                    JSONObject item = items.getJSONObject(i);
-	                    Log.i(item.optString("username"));
-	                  
-	                    adapter.add(new publisherItems(item.optString("title"), item.optString("imageurl"),item.optString("userfacebookid") ,item.optString("description"),item.optString("online"),item.optString("offlineimageurl")));
-	                   
-	            }
-	              
-	               
-	    		 
-	            mDrawerList.setAdapter(adapter);
-	    		
-	        }
-	        catch(Exception e){
-	            e.printStackTrace();
-	        }
+			// JSONObject value = json.getJSONArray("publishers");
+			JSONArray items = json.getJSONArray("publishers");
+			for (int i = 0; i < items.length(); i++) {
 
+				JSONObject item = items.getJSONObject(i);
+				Log.i(item.optString("username"));
 
-	    }
-	 
+				adapter.add(new publisherItems(item.optString("title"), item
+						.optString("imageurl"), item
+						.optString("userfacebookid"), item
+						.optString("description"), item.optString("online"),
+						item.optString("offlineimageurl")));
+
+			}
+
+			mDrawerList.setAdapter(adapter);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private int getActionBarHeight() {
 		int actionBarHeight = 0;
 		TypedValue tv = new TypedValue();
@@ -358,7 +361,7 @@ public class MainActivity extends Activity implements MenuCallback {
 			System.err.println("============session==========");
 		}
 
-		 startRadioEye();
+		startRadioEye();
 
 	}
 
@@ -546,7 +549,7 @@ public class MainActivity extends Activity implements MenuCallback {
 								}
 							});
 
-				}
+				}          
 
 				@Override
 				public void successCallback(String channel, Object msg) {
@@ -584,7 +587,7 @@ public class MainActivity extends Activity implements MenuCallback {
 
 		return super.onCreateOptionsMenu(menu);
 	}
-
+    
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
@@ -592,6 +595,12 @@ public class MainActivity extends Activity implements MenuCallback {
 		switch (itemId) {
 		case android.R.id.home:
 			// menu.toggle();
+			if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+				// drawer is open
+				mDrawerLayout.closeDrawers();
+			} else {
+				mDrawerLayout.openDrawer(GravityCompat.START);
+			}
 			break;
 
 		}
@@ -601,6 +610,7 @@ public class MainActivity extends Activity implements MenuCallback {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		// Pass the event to ActionBarDrawerToggle, if it returns
 		// true, then it has handled the app icon touch event
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
@@ -676,17 +686,17 @@ public class MainActivity extends Activity implements MenuCallback {
 	@Override
 	public void onItemSelect(String Channel) {
 
-		 
 		pubnub.unsubscribe(AppPreferences.getInstance()
 				.getString("lastChannel"));
 
 		AppPreferences.getInstance().purString("lastChannel", Channel);
 
 		startRadioEye();
-		
-		 mDrawerLayout.closeDrawers();
+
+		mDrawerLayout.closeDrawers();
 
 	}
+
 	public class publisherItems {
 		private String publisherName;
 		private String channel;
@@ -694,50 +704,62 @@ public class MainActivity extends Activity implements MenuCallback {
 		private String offlineimageUrl;
 		private String description;
 		private String online;
-	 
-		public publisherItems(String tag, String imageUrl,String Channel , String description , String online,String offlineimageurl) {
-			this.setPublisherName(tag); 
+
+		public publisherItems(String tag, String imageUrl, String Channel,
+				String description, String online, String offlineimageurl) {
+			this.setPublisherName(tag);
 			this.setImageUrl(imageUrl);
 			this.channel = Channel;
 			this.setDescription(description);
 			this.setOnline(online);
 			this.setOfflineimageUrl(offlineimageurl);
-			
+
 		}
+
 		public String getChannel() {
 			return channel;
 		}
+
 		public void setChannel(String channel) {
 			channel = channel;
 		}
+
 		public String getPublisherName() {
 			return publisherName;
 		}
+
 		public void setPublisherName(String publisherName) {
 			this.publisherName = publisherName;
 		}
+
 		public String getImageUrl() {
 			return imageUrl;
 		}
+
 		public void setImageUrl(String imageUrl) {
 			this.imageUrl = imageUrl;
 		}
+
 		public String getDescription() {
 			return description;
 		}
+
 		public void setDescription(String description) {
 			this.description = description;
 		}
-		 
+
 		public String getOfflineimageUrl() {
 			return offlineimageUrl;
 		}
+
 		public void setOfflineimageUrl(String offlineimageUrl) {
 			this.offlineimageUrl = offlineimageUrl;
 		}
+
 		public String getOnline() {
 			return online;
 		}
+
 		public void setOnline(String online) {
 			this.online = online;
 		}
@@ -745,59 +767,48 @@ public class MainActivity extends Activity implements MenuCallback {
 
 	public class SampleAdapter extends ArrayAdapter<publisherItems> {
 
-	 
-		
-	 
-		
-		
 		public SampleAdapter(Context context) {
 			super(context, 0);
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);
+				convertView = LayoutInflater.from(getContext()).inflate(
+						R.layout.row, null);
 			}
-			
-			 
-			String url = getItem(position).getOnline().equalsIgnoreCase("t") ? getItem(position).getImageUrl() : getItem(position).getOfflineimageUrl();
-			
-			NetworkImageView imageUrl = (NetworkImageView) convertView.findViewById(R.id.image_item);
-			 imageUrl.setImageUrl(url,MyVolley.getImageLoader());
-			 
-		 
-			 
-			TextView title = (TextView) convertView.findViewById(R.id.lbl_contact_name_item);
-		 
-			
-			
-			
-			
-			TextView description = (TextView) convertView.findViewById(R.id.lbl_contact_description_item);
+
+			String url = getItem(position).getOnline().equalsIgnoreCase("t") ? getItem(
+					position).getImageUrl()
+					: getItem(position).getOfflineimageUrl();
+
+			NetworkImageView imageUrl = (NetworkImageView) convertView
+					.findViewById(R.id.image_item);
+			imageUrl.setImageUrl(url, MyVolley.getImageLoader());
+
+			TextView title = (TextView) convertView
+					.findViewById(R.id.lbl_contact_name_item);
+
+			TextView description = (TextView) convertView
+					.findViewById(R.id.lbl_contact_description_item);
 			title.setText(getItem(position).getPublisherName());
 			description.setText(getItem(position).getDescription());
-			
-			 if (getItem(position).getOnline().equalsIgnoreCase("f")) {
-					title.setTextColor(Color.GRAY);
-					description.setTextColor(Color.GRAY);
-			 } 
-			 
-			 
-			 
-			
-			
-			final String channel =getItem(position).getChannel();
-			
+
+			if (getItem(position).getOnline().equalsIgnoreCase("f")) {
+				title.setTextColor(Color.GRAY);
+				description.setTextColor(Color.GRAY);
+			}
+
+			final String channel = getItem(position).getChannel();
+
 			convertView.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
-					
-					 
+
 					onItemSelect(channel);
-					 
+
 				}
-				
+
 			});
 
 			return convertView;

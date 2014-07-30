@@ -9,10 +9,12 @@
 
     <style name="ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:icon">@drawable/radioicon</item>
-        <item name="android:background">#FF666666</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:homeAsUpIndicator">@drawable/radioicon</item>
+        <item name="android:background">#ecf0f1</item>
+      
     </style>
+
+   
+ 
 
     <style name="GenericProgressBackground" parent="android:Theme">
         <item name="android:layout_width">fill_parent</item>
@@ -26,7 +28,5 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:indeterminate">true</item>
     </style>
-
-    
 
 </resources>
