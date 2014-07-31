@@ -17,6 +17,7 @@ import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubSyncedObject;
 
+//http://localhost:8080/RadioEyeApi/rest/set/table/users.yakir/name/yakir
 //Sets the path to base URL + /hello
 @Path("/set")
 public class SetData {

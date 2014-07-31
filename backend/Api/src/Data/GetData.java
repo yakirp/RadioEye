@@ -14,6 +14,8 @@ import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 import com.pubnub.api.PubnubSyncedObject;
 
+
+//http://localhost:8080/RadioEyeApi/rest/get/table/users.yakir
 //Sets the path to base URL + /get
 @Path("/get")
 public class GetData {
