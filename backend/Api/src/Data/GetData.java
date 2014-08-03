@@ -45,6 +45,8 @@ public class GetData {
 					System.out.println("Object Initialized : " + message);
 					 
 						try {
+							
+							System.err.println(myData.toString());
 							System.out.println(myData.toString(2));
 						} catch (org.json.JSONException e) {
 							// TODO Auto-generated catch block
