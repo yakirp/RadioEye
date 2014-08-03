@@ -10,6 +10,8 @@ import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
 
+import org.json.JSONArray;
+ 
 import org.json.JSONObject;
 
 import com.pubnub.api.Callback;
@@ -28,12 +30,17 @@ public class SetData {
 			@PathParam("path") String path, @PathParam("key") String key,
 			@PathParam("value") String value) throws org.json.JSONException {
 
-	 
-
-		Pubnub pubnub = new Pubnub("pub-69159aa7-3bcf-4d09-ae25-3269f14acb6a",
-				"sub-4d81bf51-1eb6-11e1-82b2-3d61f7276a67");
-		final PubnubSyncedObject myData = pubnub.createSyncObject(objectId,
-				path);
+		Pubnub pubnub = new Pubnub("pub-69159aa7-3bcf-4d09-ae25-3269f14acb6a","sub-4d81bf51-1eb6-11e1-82b2-3d61f7276a67");
+		pubnub.setCacheBusting(false);
+		pubnub.setOrigin("pubsub-beta");
+		
+		System.out.println(objectId);
+		System.out.println(path);
+		System.out.println(key);
+		System.out.println(value);
+		
+		
+		final PubnubSyncedObject myData = pubnub.createSyncObject(objectId,path);
 
 		JSONObject j = new JSONObject();
 		j.put(key, value);
@@ -44,8 +51,14 @@ public class SetData {
 			@Override
 			public void successCallback(String channel, Object message) {
 				System.out.println("set(): SUCCESS");
-			 
-				System.out.println(message);
+
+				System.out.println(message.toString());
+				  try {
+					System.out.println(myData.toString(1));
+				} catch (org.json.JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 
@@ -53,7 +66,6 @@ public class SetData {
 			@Override
 			public void errorCallback(String channel, PubnubError error) {
 
-			 
 				System.out.println(System.currentTimeMillis() / 1000 + " : "
 						+ error);
 			}

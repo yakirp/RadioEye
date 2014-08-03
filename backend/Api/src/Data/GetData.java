@@ -19,16 +19,19 @@ import com.pubnub.api.PubnubSyncedObject;
 //Sets the path to base URL + /get
 @Path("/get")
 public class GetData {
-
+    
 	@GET
 	@Path("/{objectId}/{path}")
 	public Response getMsg(@PathParam("objectId") String objectId,
 			@PathParam("path") String path) throws org.json.JSONException {
-
+  
 		 
 
 		Pubnub pubnub = new Pubnub("pub-69159aa7-3bcf-4d09-ae25-3269f14acb6a",
 				"sub-4d81bf51-1eb6-11e1-82b2-3d61f7276a67");
+		pubnub.setCacheBusting(false);
+		pubnub.setOrigin("pubsub-beta");
+		
 		final PubnubSyncedObject myData = pubnub.createSyncObject(objectId,
 				path);
 
@@ -40,12 +43,14 @@ public class GetData {
 				@Override
 				public void connectCallback(String channel, Object message) {
 					System.out.println("Object Initialized : " + message);
-					try {
-						System.out.println(myData.toString(2));
-					} catch (org.json.JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					 
+						try {
+							System.out.println(myData.toString(2));
+						} catch (org.json.JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				 
 				}
 
 				// Called every time ObjectID is changed, starting with the
@@ -55,7 +60,7 @@ public class GetData {
 				public void successCallback(String channel, Object message) {
 					System.out.println(message);
 					try {
-						System.out.println(myData.toString(2));
+						System.out.println(myData.toString(1));
 					} catch (org.json.JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
