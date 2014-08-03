@@ -49,7 +49,7 @@ public class SetData {
 				  try {
 					System.out.println(myData.toString(1));
 				} catch (org.json.JSONException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
   
