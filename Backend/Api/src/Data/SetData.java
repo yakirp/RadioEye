@@ -38,7 +38,7 @@ public class SetData {
 		JSONObject j = new JSONObject();
 		j.put(key, value);
 
-		myData.set(path, j, new Call back() {
+		myData.set(path, j, new Callback() {
 
 			// Called when this operation succeeds
 			@Override
