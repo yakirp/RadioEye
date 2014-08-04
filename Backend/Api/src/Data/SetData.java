@@ -6,10 +6,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.json.JSONObject;
+
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
 import com.pubnub.api.PubnubSyncedObject;
 
 //http://localhost:8080/RadioEyeApi/rest/set/table/users.yakir/name/yakir
@@ -17,27 +20,45 @@ import com.pubnub.api.PubnubSyncedObject;
 @Path("/set")
 public class SetData {
 
+	private PubnubSyncedObject myData;
+
 	@GET
 	@Path("/{objectId}/{path}/{key}/{value}")
 	public Response getMsg(@PathParam("objectId") String objectId,
-			@PathParam("path") String path, @PathParam("key") String key,
-			@PathParam("value") String value) throws org.json.JSONException {
+			@PathParam("path") final String path, @PathParam("key") String key,
+			@PathParam("value") String value) throws org.json.JSONException,
+			PubnubException {
 
-		Pubnub pubnub = new Pubnub("pub-69159aa7-3bcf-4d09-ae25-3269f14acb6a","sub-4d81bf51-1eb6-11e1-82b2-3d61f7276a67");
+		Pubnub pubnub = new Pubnub("pub-69159aa7-3bcf-4d09-ae25-3269f14acb6a",
+				"sub-4d81bf51-1eb6-11e1-82b2-3d61f7276a67");
 		pubnub.setCacheBusting(false);
 		pubnub.setOrigin("pubsub-beta");
-		
+
 		System.out.println(objectId);
 		System.out.println(path);
 		System.out.println(key);
 		System.out.println(value);
-		
-		
-		final PubnubSyncedObject myData = pubnub.createSyncObject(objectId,path);
 
-		JSONObject j = new JSONObject();
+		myData = pubnub.createSyncObject(objectId, path);
+
+		final JSONObject j = new JSONObject();
 		j.put(key, value);
 
+		myData.initSync(new Callback() {
+
+			@Override
+			public void connectCallback(String arg0, Object arg1) {
+				System.out.println("-------------------");
+				set(path, myData, j);
+				super.connectCallback(arg0, arg1);
+			}
+		});
+
+		return Response.status(200).entity("").build();
+
+	}
+
+	private void set(String path, final PubnubSyncedObject myData, JSONObject j) {
 		myData.set(path, j, new Callback() {
 
 			// Called when this operation succeeds
@@ -46,13 +67,13 @@ public class SetData {
 				System.out.println("set(): SUCCESS");
 
 				System.out.println(message.toString());
-				  try {
+				try {
 					System.out.println(myData.toString(1));
 				} catch (org.json.JSONException e) {
-					
+
 					e.printStackTrace();
 				}
-  
+
 			}
 
 			// Called if an error occurs
@@ -64,9 +85,6 @@ public class SetData {
 			}
 
 		});
-
-		return Response.status(200).entity("").build();
-
 	}
 
 	// This method is called if TEXT_PLAIN is request
