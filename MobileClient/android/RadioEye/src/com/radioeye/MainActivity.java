@@ -47,6 +47,7 @@ import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
+import com.pubnub.api.PubnubSyncedObject;
 import com.radioeye.clients.AwsMobileClient;
 import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.RadioEyeClient;
@@ -96,7 +97,65 @@ public class MainActivity extends Activity implements MenuCallback {
 
 		pubnub = new Pubnub("pub-69159aa7-3bcf-4d09-ae25-3269f14acb6a",
 				"sub-4d81bf51-1eb6-11e1-82b2-3d61f7276a67", "", false);
+	//	pubnub.setCacheBusting(false);
+		//pubnub.setOrigin("pubsub-beta");
 
+		final PubnubSyncedObject myData = pubnub.createSyncObject("table",
+				"users.yakir");
+  
+		try {
+			myData.initSync(new Callback() {
+
+				// Called when the initialization process connects the ObjectID
+				// to PubNub
+				@Override
+				public void connectCallback(String channel, Object message) {
+				 
+				 
+
+					
+					
+				 
+					try {
+
+						System.err.println(myData.toString());
+						System.out.println(myData.toString(2));
+					} catch (org.json.JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
+				// Called every time ObjectID is changed, starting with the
+				// initialization process
+				// that retrieves current state of the object
+				@Override
+				public void successCallback(String channel, Object message) {
+
+					System.err.println("initSync()-> successCallback -> print message: "
+							+ message.toString() + "</br>");
+				 
+
+				}
+
+				// Called whenever any error occurs
+				@Override
+				public void errorCallback(String channel, PubnubError error) {
+					System.err.println(System.currentTimeMillis() / 1000
+							+ " : "
+
+							+ error);
+
+					 
+				}
+
+			});
+		} catch (PubnubException e) {
+			e.printStackTrace();
+		}
+		
+		
 		setRadioEyeClient(new RadioEyeClient(activity));
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
