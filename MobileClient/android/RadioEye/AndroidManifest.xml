@@ -15,8 +15,8 @@
 
     <application
         android:name="com.radioeye.RadioEyeApp"
-        android:allowBackup="false"
-        android:icon="@drawable/radioicon"
+
+
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity

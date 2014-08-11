@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="libs1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/common/libs/com.haarman.listviewanimations-2.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/common/libs/aws-android-sdk-2.0.4-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/common/libs/aws-android-sdk-2.0.4-cognito.jar!/" />
+      <root url="jar://$PROJECT_DIR$/common/libs/aws-android-sdk-2.0.4-mobileanalytics.jar!/" />
+      <root url="jar://$PROJECT_DIR$/common/libs/cloudinaryandroid-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/common/libs/novocation-core-1.0.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

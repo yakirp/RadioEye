@@ -714,9 +714,9 @@ public class MainActivity extends Activity implements MenuCallback {
 	@Override
 	public void onBackPressed() {
 
-		if (menu.isMenuShowing()) {
-			menu.showContent();
-		}
+//		if (menu.isMenuShowing()) {
+//			menu.showContent();
+//		}
 
 		if (getSlidingPanel() != null && getSlidingPanel().isPanelExpanded()
 				|| getSlidingPanel().isPanelAnchored()) {
