@@ -5,7 +5,7 @@
     android:layout_gravity="center"
     android:background="@android:color/transparent" >
 
-    <com.radioeye.ui.CircularImageView
+    <com.makeramen.RoundedImageView
         android:id="@+id/profileImage"
         android:layout_width="150dp"
         android:layout_height="150dp"

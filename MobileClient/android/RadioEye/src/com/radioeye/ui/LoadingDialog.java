@@ -85,7 +85,7 @@ public class LoadingDialog {
 			@Override
 			public void run() {
 
-				final CircularImageView profileImageView = (CircularImageView) dialog
+				final com.makeramen.RoundedImageView profileImageView = (com.makeramen.RoundedImageView) dialog
 						.findViewById(R.id.profileImage);
 				activity.runOnUiThread(new Runnable() {
 
@@ -94,7 +94,7 @@ public class LoadingDialog {
 						profileImageView.setBorderColor(activity.getResources()
 								.getColor(R.color.GrayLight));
 						profileImageView.setBorderWidth(10);
-						profileImageView.addShadow();
+					//	profileImageView.addShadow();
 
 						Animation.tada(profileImageView).start();
 

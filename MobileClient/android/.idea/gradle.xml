@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/SlidingMenuLib" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/facebook" />
+            <option value="$PROJECT_DIR$/library" />
           </set>
         </option>
       </GradleProjectSettings>

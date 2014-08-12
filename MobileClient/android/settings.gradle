@@ -1,4 +1,4 @@
-include ':facebook'
+include ':facebook', ':library'
 include ':RadioEye'
 include ':SlidingMenuLib'
 include ':common'
