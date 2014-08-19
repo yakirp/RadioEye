@@ -16,6 +16,7 @@ public class Blur {
     }
 
     public static Bitmap apply(Context context, Bitmap sentBitmap, int radius) {
+        /*
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
         final RenderScript rs = RenderScript.create(context);
         final Allocation input = Allocation.createFromBitmap(rs, sentBitmap, Allocation.MipmapControl.MIPMAP_NONE,
@@ -30,6 +31,9 @@ public class Blur {
         input.destroy();
         output.destroy();
         script.destroy();
+
         return bitmap;
+        */
+        return sentBitmap;
     }
 }

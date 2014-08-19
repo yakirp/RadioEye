@@ -3,131 +3,144 @@ package com.radioeye.ui;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.InputMismatchException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
 import android.view.WindowManager.BadTokenException;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidviewhover.BlurLayout;
+import com.daimajia.androidviewhover.tools.Blur;
 import com.radioeye.R;
 import com.radioeye.utils.AppPreferences;
 
-public class LoadingDialog {
+public class LoadingDialog extends Dialog {
 
-	private Activity activity;
-	private ProgressDialog progDailog;
-	 
 
-	public LoadingDialog(Activity activity) {
-		super();
+    private   BlurLayout.AppearListener callback;
+    private Activity activity;
 
-		this.activity = activity;
-		 
+    private BlurLayout hoverLayout;
 
-	}
 
-	public void showLoadingDialog() {
-		if (progDailog == null) {
-			progDailog = createProgressDialog(activity);
-			progDailog.show();
-		} else {
-			// if(!((Activity) activity).isFinishing())
-			// {
-			progDailog.show();
-			// }
 
-		}  
 
-	}
 
-	private ProgressDialog createProgressDialog(Context mContext) {
-		ProgressDialog dialog = new ProgressDialog(mContext);
+    public LoadingDialog(Activity context) {
+        super(context);
+        this.activity = context;
 
-		try {
-			dialog.show();
-		} catch (BadTokenException e) {
+    }
 
-		}
-		dialog.setCancelable(false);
-		dialog.setContentView(R.layout.progressdialog);
 
-	 
-		
-//		String url = AppPreferences.getInstance().getString("profile_image");
-//		if (url != "") {
-//			try {
-//				updateLoadingProfileImage(dialog, url);
-//			} catch (IOException e) {
-//
-//				e.printStackTrace();
-//			}
-//		}
 
-		return dialog;
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //dialog.setCancelable(false);
+        setContentView(R.layout.progressdialog);
 
-	private Bitmap mIcon_val;
 
-	public void close() {
-		try {
-			progDailog.dismiss();
-		} catch (Throwable t) {
-		}
-	}
 
-	public void updateLoadingProfileImage(final ProgressDialog dialog,
-			final String url) throws IOException {
+        //  View hover2 = this.activity.getLayoutInflater().inflate(R.layout.hover_progress, null);
+        // View hover2 =   LayoutInflater.from( this.activity).inflate(R.layout.hover_progress, null);
+        View hover2 = getLayoutInflater().inflate(R.layout.hover_progress, null);
+        hoverLayout = (BlurLayout) findViewById(R.id.blur_layout_progress);
+        hoverLayout.setHoverView(hover2,false);
 
-		new Thread(new Runnable() {
 
-			@Override
-			public void run() {
 
-				final com.makeramen.RoundedImageView profileImageView = (com.makeramen.RoundedImageView) dialog
-						.findViewById(R.id.profileImage);
-				activity.runOnUiThread(new Runnable() {
 
-					@Override
-					public void run() {
-						profileImageView.setBorderColor(activity.getResources()
-								.getColor(R.color.GrayLight));
-						profileImageView.setBorderWidth(10);
-					//	profileImageView.addShadow();
+        hoverLayout.addChildAppearAnimator(hover2, R.id.profileImage, Techniques.FadeInDown, 1200);
+        hoverLayout.addChildDisappearAnimator(hover2, R.id.profileImage, Techniques.FadeOutUp);
 
-						Animation.tada(profileImageView).start();
+        hoverLayout.addChildAppearAnimator(hover2, R.id.progressBar1, Techniques.FadeInUp, 1200);
+        hoverLayout.addChildDisappearAnimator(hover2, R.id.progressBar1, Techniques.FadeOutDown);
 
-					}
-				});
+        hoverLayout.showHover(callback);
+    }
 
-				URL newurl;
-				try {
-					newurl = new URL(url);
 
-					mIcon_val = BitmapFactory.decodeStream(newurl
-							.openConnection().getInputStream());
+    public void start(BlurLayout.AppearListener callback) {
+        this.callback = callback;
 
-					activity.runOnUiThread(new Runnable() {
+      show();
+    }
 
-						@Override
-						public void run() {
-							profileImageView.setImageBitmap(mIcon_val);
+    @Override
+    public void show() {
+        super.show();
 
-						}
-					});
 
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+    }
 
-			}
-		}).start();
+    @Override
+    public void hide() {
 
-	}
+        close();
+
+        super.hide();
+    }
+
+    public void close() {
+
+
+        if (hoverLayout.getHoverStatus()== BlurLayout.HOVER_STATUS.APPEARED || hoverLayout.getHoverStatus()== BlurLayout.HOVER_STATUS.APPEARING) {
+
+            System.out.println("close close close ");
+
+
+            new Thread(new Runnable() {
+                public void run() {
+                    while (hoverLayout.getHoverStatus() != BlurLayout.HOVER_STATUS.APPEARED) {
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException e) {
+                        }
+
+                    }
+
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            hoverLayout.dismissHover(new BlurLayout.DisappearListener() {
+                                @Override
+                                public void onDisappearStart() {
+
+                                }
+
+                                @Override
+                                public void onDisappearEnd() {
+                                        dismiss();
+                                }
+                            });
+                        }
+
+                    });
+
+                }
+            }).start();
+
+
+        }
+
+
+
+        }
+
+
+
 
 }

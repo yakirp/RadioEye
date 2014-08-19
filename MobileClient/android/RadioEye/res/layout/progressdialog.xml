@@ -5,18 +5,18 @@
     android:layout_gravity="center"
     android:background="@android:color/transparent" >
 
-    <com.makeramen.RoundedImageView
-        android:id="@+id/profileImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/radioicon" />
 
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp" />
+    <com.daimajia.androidviewhover.BlurLayout
+        android:id="@+id/blur_layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+    </com.daimajia.androidviewhover.BlurLayout>
+
+
+
+
 
 </RelativeLayout>

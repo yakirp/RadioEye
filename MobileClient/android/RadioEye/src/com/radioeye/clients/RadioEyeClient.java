@@ -5,18 +5,24 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
- 
+
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.common.TaskCallback;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidviewhover.BlurLayout;
 import com.google.gson.Gson;
 import com.radioeye.R;
 import com.radioeye.RadioEyeApp;
 import com.radioeye.datastructure.CurrentPublisherImagesFromServer;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
+
 import com.radioeye.ui.LoadingDialog;
 import com.radioeye.ui.SlidingUpPanelLayout;
 import com.radioeye.ui.SlidingUpPanelLayout.Panelcallback;
@@ -26,7 +32,7 @@ import com.radioeye.volley.RequestManager;
 
 public class RadioEyeClient {
 
-	private static final int AD_MINIMUM_SHOWING_TIME_IN_MILISECIME = 2500;
+	private static final int AD_MINIMUM_SHOWING_TIME_IN_MILISECIME = 10;
 	private static final String BASE_URL = RadioEyeApp.getBaseUrl();
 	private static final String GET_PUBLISHER_IMAGES_BASE_URL = BASE_URL
 			+ "/server/php/getUserCurrentImages.php?userId=";
@@ -35,24 +41,33 @@ public class RadioEyeClient {
 
 	private Activity activity;
 
-	private LoadingDialog loadingDialog;
+    private BlurLayout hoverLayout;
 
-	public RadioEyeClient(Activity activity) {
+    private   View hover2;
+
+
+    public RadioEyeClient(Activity activity) {
 
 		super();
 		this.activity = activity;
 		// set UI thread
 		setMainHandler(new Handler(Looper.getMainLooper()));
 
-		setLoadingDialog(new LoadingDialog(activity));
+          hover2 = LayoutInflater.from(activity).inflate(R.layout.hover_ads_panel, null);
+        hoverLayout = (BlurLayout) activity.findViewById(R.id.main_blur_layout);
+        hoverLayout.setHoverView(hover2,false);
+
+
+
+
+        hoverLayout.addChildAppearAnimator(hover2, R.id.webview_ad, Techniques.FadeInRight, 1200);
+        hoverLayout.addChildDisappearAnimator(hover2, R.id.webview_ad, Techniques.FadeOutLeft);
+
+
 
 	}
 
-	public void showLoadingDialog() {
 
-		getLoadingDialog().showLoadingDialog();
-
-	}
 
 	private String currentAdImageId;
 
@@ -218,13 +233,17 @@ public class RadioEyeClient {
 	 */
 	private void checkIfLoadingFInish(final boolean[] loadedImages) {
 
+        System.out.println("=================                      checkIfLoadingFInish");
+
 		for (boolean image : loadedImages) {
+            System.out.println(image);
 			if (!image)
 				return;
 
 		}
 		// if all images loaded , close the dialog
-		getLoadingDialog().close();
+		//getLoadingDialog().close();
+       // LoadingDialog.getDialog().close();
 
 	}
 
@@ -254,96 +273,35 @@ public class RadioEyeClient {
 
 					// expand the ad panel
 
-					panel.expandPanel(new Panelcallback() {
+                    hoverLayout.showHover(new BlurLayout.AppearListener() {
+                        @Override
+                        public void onAppearStart() {
+
+                        }
+
+                        @Override
+                        public void onAppearEnd() {
+                            handleImageLoadingAfterAdIsShown(url, webId, panel, callback);
+                        }
+                    });
+
+                    /*
+
+			 		panel.expandPanel(new Panelcallback() {
 
 						@Override
 						public void onCollapsFinish() {
 
-							AwsMobileClient.getInstance().AdView(
-									currentAdImageId,
-									AppPreferences.getInstance().getString(
-											"lastChannel"));
-
-							final long startTime = System.currentTimeMillis();
-
-							RequestManager.getInstance().doRequest()
-									.loadImage(url, new ImageListener() {
-
-										@Override
-										public void onErrorResponse(
-												VolleyError error) {
-											Log.e("Image Load Error: "
-													+ error.getMessage());
-											Log.e(url);
-											Log.e(String
-													.valueOf(error.networkResponse.statusCode));
-											error.printStackTrace();
-										}
-
-										@Override
-										public void onResponse(
-												ImageContainer response,
-												boolean isImmediate) {
-											ImageView avatar = (ImageView) activity
-													.findViewById(webId);
- 
-											avatar.setImageBitmap(response
-													.getBitmap());
-
-									 
-											
-											while (avatar.getDrawable()  == null) {
-
-											}
-
-											// After loading, we wait for some
-											// milisec
-											// before closing the ad panel
-											new Thread(new Runnable() {
-
-												@Override
-												public void run() {
-													// we wait the ad minimum
-													// time
-													while (System
-															.currentTimeMillis()
-															- startTime <= AD_MINIMUM_SHOWING_TIME_IN_MILISECIME) {
-
-													}
-													// now we close the ad panel
-													postToUiThread(new Runnable() {
-
-														@Override
-														public void run() {
-															panel.collapsePanel(new Panelcallback() {
-
-																@Override
-																public void onCollapsFinish() {
-																	if (callback != null) {
-																		callback.onSuccess();
-																	}
-
-																};
-
-															});
-
-														}
-													});
-
-												}
-
-											}).start();
-
-										}
-									});
+                            handleImageLoadingAfterAdIsShown(url, webId, panel, callback);
 
 						} // after sliding panel with the ad is up
 
 					}); // expandPane
-
+*/
 				} // if (isShowAd)
 				else {
-					ImageView avatar = (ImageView) activity.findViewById(webId);
+
+
 
 					RequestManager.getInstance().doRequest()
 							.loadImage(url, new ImageListener() {
@@ -358,8 +316,12 @@ public class RadioEyeClient {
 								@Override
 								public void onResponse(ImageContainer response,
 										boolean isImmediate) {
-									ImageView avatar = (ImageView) activity
-											.findViewById(webId);
+                                    ImageView avatar;
+                                    if (webId == R.id.webview_ad) {
+                                          avatar = (ImageView) hover2.findViewById(webId);
+                                    } else {
+                                          avatar = (ImageView) activity.findViewById(webId);
+                                    }
 
 									avatar.setImageBitmap(response.getBitmap());
 
@@ -377,7 +339,107 @@ public class RadioEyeClient {
 
 	}
 
-	public void postToUiThread(Runnable runnable) {
+    private void handleImageLoadingAfterAdIsShown(final String url, final int webId, final SlidingUpPanelLayout panel, final TaskCallback callback) {
+        AwsMobileClient.getInstance().AdView(
+                currentAdImageId,
+                AppPreferences.getInstance().getString(
+                        "lastChannel"));
+
+        final long startTime = System.currentTimeMillis();
+
+        RequestManager.getInstance().doRequest()
+                .loadImage(url, new ImageListener() {
+
+                    @Override
+                    public void onErrorResponse(
+                            VolleyError error) {
+                        Log.e("Image Load Error: "
+                                + error.getMessage());
+                        Log.e(url);
+                        Log.e(String
+                                .valueOf(error.networkResponse.statusCode));
+                        error.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(
+                            ImageContainer response,
+                            boolean isImmediate) {
+
+
+                        ImageView avatar = (ImageView) activity
+                                .findViewById(webId);
+
+avatar.setImageBitmap(null);
+
+                        avatar.setImageBitmap(response
+                                .getBitmap());
+
+
+
+                        while (avatar.getDrawable()==null) {
+
+                        }
+
+                        // After loading, we wait for some
+                        // milisec
+                        // before closing the ad panel
+                        new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // we wait the ad minimum
+                                // time
+                                while (System
+                                        .currentTimeMillis()
+                                        - startTime <= AD_MINIMUM_SHOWING_TIME_IN_MILISECIME) {
+
+                                }
+                                // now we close the ad panel
+                                postToUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+
+                                        hoverLayout.dismissHover(new BlurLayout.DisappearListener() {
+                                            @Override
+                                            public void onDisappearStart() {
+
+                                            }
+
+                                            @Override
+                                            public void onDisappearEnd() {
+                                                if (callback != null) {
+                                                    callback.onSuccess();
+                                                }
+                                            }
+                                        });
+                                        /*
+                                        panel.collapsePanel(new Panelcallback() {
+
+                                            @Override
+                                            public void onCollapsFinish() {
+                                                if (callback != null) {
+                                                    callback.onSuccess();
+                                                }
+
+                                            };
+
+                                        });
+                                        */
+
+                                    }
+                                });
+
+                            }
+
+                        }).start();
+
+                    }
+                });
+    }
+
+    public void postToUiThread(Runnable runnable) {
 
 		// Method 1 :
 		// getMainHandler().post(runnable);
@@ -387,13 +449,9 @@ public class RadioEyeClient {
 
 	}
 
-	public LoadingDialog getLoadingDialog() {
-		return loadingDialog;
-	}
 
-	public void setLoadingDialog(LoadingDialog loadingDialog) {
-		this.loadingDialog = loadingDialog;
-	}
+
+
 
 	public Handler getMainHandler() {
 		return mainHandler;

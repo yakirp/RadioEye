@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -27,13 +28,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.NetworkImageView;
+import com.daimajia.androidviewhover.BlurLayout;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.GraphUserCallback;
@@ -52,12 +56,14 @@ import com.radioeye.clients.AwsMobileClient;
 import com.radioeye.clients.FacebookClinet;
 import com.radioeye.clients.RadioEyeClient;
 import com.radioeye.datastructure.NewImageMessageFromPublisher;
+import com.radioeye.ui.LoadingDialog;
 import com.radioeye.ui.MenuListFragment;
 import com.radioeye.ui.SlidingUpPanelLayout;
 import com.radioeye.utils.AppPreferences;
 import com.radioeye.utils.Log;
 import com.radioeye.volley.MyVolley;
 import com.radioeye.volley.RequestManager;
+import com.daimajia.androidanimations.library.Techniques;
 
 /**
  * Main RadioEye activity
@@ -79,7 +85,9 @@ public class MainActivity extends Activity implements MenuCallback {
 	private DrawerLayout mDrawerLayout;
 	private SwipeRefreshLayout swipeLayout;
 	private ListView mDrawerList;
-
+    private BlurLayout hoverLayout;
+    private float lastTranslate = 0.0f;
+    private FrameLayout frame;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,6 +97,29 @@ public class MainActivity extends Activity implements MenuCallback {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		setContentView(R.layout.main);
+
+
+
+        View hover2 = LayoutInflater.from(this).inflate(R.layout.hover_center_image, null);
+
+        hoverLayout = (BlurLayout)findViewById(R.id.blur_layout);
+        hoverLayout.setHoverView(hover2 , true);
+
+
+
+        hoverLayout.addChildAppearAnimator(hover2, R.id.description, Techniques.FadeInUp);
+        hoverLayout.addChildDisappearAnimator(hover2, R.id.description, Techniques.FadeOutDown);
+        hoverLayout.addChildAppearAnimator(hover2, R.id.avatar, Techniques.DropOut, 1200);
+        hoverLayout.addChildDisappearAnimator(hover2, R.id.avatar, Techniques.FadeOutUp);
+        hoverLayout.setBlurDuration(1000);
+
+       // hoverLayout.toggleHover();
+
+
+
+
+
+
 
 		activity = this;
 
@@ -100,62 +131,62 @@ public class MainActivity extends Activity implements MenuCallback {
 	//	pubnub.setCacheBusting(false);
 		//pubnub.setOrigin("pubsub-beta");
 
-		final PubnubSyncedObject myData = pubnub.createSyncObject("table",
-				"users.yakir");
-  
-		try {
-			myData.initSync(new Callback() {
+//		final PubnubSyncedObject myData = pubnub.createSyncObject("table",
+//				"users.yakir");
+//
+//		try {
+//			myData.initSync(new Callback() {
+//
+//				// Called when the initialization process connects the ObjectID
+//				// to PubNub
+//				@Override
+//				public void connectCallback(String channel, Object message) {
+//
+//
+//
+//
+//
+//
+//					try {
+//
+//						System.err.println(myData.toString());
+//						System.out.println(myData.toString(2));
+//					} catch (org.json.JSONException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//
+//				}
+//
+//				// Called every time ObjectID is changed, starting with the
+//				// initialization process
+//				// that retrieves current state of the object
+//				@Override
+//				public void successCallback(String channel, Object message) {
+//
+//					System.err.println("initSync()-> successCallback -> print message: "
+//							+ message.toString() + "</br>");
+//
+//
+//				}
+//
+//				// Called whenever any error occurs
+//				@Override
+//				public void errorCallback(String channel, PubnubError error) {
+//					System.err.println(System.currentTimeMillis() / 1000
+//							+ " : "
+//
+//							+ error);
+//
+//
+//				}
+//
+//			});
+//		} catch (PubnubException e) {
+//			e.printStackTrace();
+//		}
 
-				// Called when the initialization process connects the ObjectID
-				// to PubNub
-				@Override
-				public void connectCallback(String channel, Object message) {
-				 
-				 
 
-					
-					
-				 
-					try {
-
-						System.err.println(myData.toString());
-						System.out.println(myData.toString(2));
-					} catch (org.json.JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				}
-
-				// Called every time ObjectID is changed, starting with the
-				// initialization process
-				// that retrieves current state of the object
-				@Override
-				public void successCallback(String channel, Object message) {
-
-					System.err.println("initSync()-> successCallback -> print message: "
-							+ message.toString() + "</br>");
-				 
-
-				}
-
-				// Called whenever any error occurs
-				@Override
-				public void errorCallback(String channel, PubnubError error) {
-					System.err.println(System.currentTimeMillis() / 1000
-							+ " : "
-
-							+ error);
-
-					 
-				}
-
-			});
-		} catch (PubnubException e) {
-			e.printStackTrace();
-		}
-		
-		
 		setRadioEyeClient(new RadioEyeClient(activity));
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -165,6 +196,9 @@ public class MainActivity extends Activity implements MenuCallback {
 		// opens
 		mDrawerLayout.setDrawerShadow(R.drawable.above_shadow,
 				GravityCompat.START);
+
+
+        frame = (FrameLayout) findViewById(R.id.frame_container);
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -178,13 +212,20 @@ public class MainActivity extends Activity implements MenuCallback {
 		R.string.action_contact /* "close drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle("s");
+				getActionBar().setTitle("");
+
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}
 
-			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle("d");
+
+
+
+            public void onDrawerOpened(View drawerView) {
+				getActionBar().setTitle("");
+
+
+
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}
@@ -196,12 +237,15 @@ public class MainActivity extends Activity implements MenuCallback {
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		getActionBar().setHomeButtonEnabled(true);
 
 		initialSlidingPanel();
 
 		list();
 	}
+
+
 
 	/* Called whenever we call invalidateOptionsMenu() */
 	@Override
@@ -386,7 +430,7 @@ public class MainActivity extends Activity implements MenuCallback {
 
 		AwsMobileClient.getInstance().updateAwsAboutPauseSession();
 
-		getRadioEyeClient().getLoadingDialog().close();
+        dialog.close();
 
 		RequestManager.getInstance().cancelAllTraffic();
 	}
@@ -492,24 +536,46 @@ public class MainActivity extends Activity implements MenuCallback {
 
 	}
 
+    private LoadingDialog dialog;
+
 	private void startRadioEye() {
 
 		// Get the publisher images from server
 		// and load them
+        dialog =  new LoadingDialog(this);
 
-		String localChannel = AppPreferences.getInstance().getString(
-				"lastChannel");
-
+        String  localChannel = AppPreferences.getInstance().getString(
+                "lastChannel");
 		if (!localChannel.equals("")) {
+            System.out.println("--------------localChannel--------------");
+            dialog.start(new BlurLayout.AppearListener() {
+                @Override
+                public void onAppearStart() {
 
-			getRadioEyeClient().showLoadingDialog();
+                    String  localChannel = AppPreferences.getInstance().getString(
+                            "lastChannel");
+
+                    initPubnub(localChannel);
+
+                    System.out.println("--------------onAppearStart--------------");
+                }
+
+                @Override
+                public void onAppearEnd() {
+
+                    System.out.println("--------------onAppearEnd--------------");
+
+                }
+            });
 
 			// getRadioEyeClient().getAndLoadCurrentPublisherActiveImages(
 			// localChannel, getSlidingPanel());
 
 			// init pubnub clinet
-			initPubnub(localChannel);
+		//	 initPubnub(localChannel);
 		}
+
+
 	}
 
 	private void initPubnub(String channel) {
@@ -714,6 +780,7 @@ public class MainActivity extends Activity implements MenuCallback {
 	@Override
 	public void onBackPressed() {
 
+        dialog.close();
 //		if (menu.isMenuShowing()) {
 //			menu.showContent();
 //		}
