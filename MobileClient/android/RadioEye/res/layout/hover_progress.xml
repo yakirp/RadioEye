@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+
+    <com.makeramen.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:layout_width="150dip"
+        android:layout_height="150dp"
+        android:id="@+id/profileImage"
+        android:src="@drawable/radioicon"
+        android:scaleType="centerCrop"
+        app:corner_radius="10dip"
+
+        app:border_color="#ffffff"
+        app:mutate_background="true"
+
+        />
+    <!--
+      <TextView
+          android:id="@+id/loadingText"
+          android:text="Loading"
+          android:typeface="sans"
+          android:layout_marginLeft="12dp"
+          android:textSize="30dp"
+          android:textColor="#ffffff"
+          android:layout_marginBottom="12dp"
+
+          android:layout_marginTop="300dp"
+          android:layout_centerHorizontal="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content" />
+   -->
+     <ProgressBar
+          android:id="@+id/progressBar1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="300dp" />
+
+
+
+
+</RelativeLayout>
